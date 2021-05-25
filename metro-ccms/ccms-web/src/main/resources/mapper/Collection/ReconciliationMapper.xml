@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.metro.ccms.web.collection.mapper.ReconciliationMapper">
+    <resultMap id="ReconcilitionSelectResultMap" type="com.metro.ccms.web.collection.vo.ReconciliationVO">
+        <id column="id" property="id" />
+        <result column="application_no" property="applicationNo" />
+        <result column="depart_code" property="departCode" />
+        <result column="dept_name" property="deptName" />
+        <result column="store_code" property="storeCode" />
+        <result column="cust_code" property="custCode" />
+        <result column="cust_name" property="custName" />
+        <result column="card_code" property="cardCode" />
+        <result column="card_name" property="cardName" />
+        <result column="iar" property="iar" />
+        <result column="idue" property="idue" />
+        <result column="created_by" property="createdBy" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="desc" property="desc" />
+        <result column="ddate" property="ddate" />
+        <result column="deleted" property="deleted" />
+        <result column="unidue" property="unidue" />
+        <result column="cust_type" property="custType" />
+    </resultMap>
+    <sql id="BaseSql">
+        a.id, a.application_no, a.depart_code, b.dept_name, a.store_code, a.cust_code, a.cust_name, a.card_code,
+        a.card_name, a.iar, a.idue, a.created_by,a.create_time, a.updated_by, a.update_time, a.status,a.ddate
+    </sql>
+    <select id="selectReconciliation" resultMap="ReconcilitionSelectResultMap">
+        select
+        <include refid="BaseSql"/>
+        from  tb_cust_reconciliation a
+        left join sys_dept b on a.depart_code=b.dept_code
+        where a.deleted = 0
+        <if test=" id != null">
+            and a.id=#{id,jdbcType=BIGINT}
+        </if>
+        <!-- 对账单号 -->
+        <if test=" applicationNo !=null and applicationNo !=''">
+            and a.application_no=#{applicationNo,jdbcType=VARCHAR}
+        </if>
+        <!--  部门编码  -->
+        <if test=" departCode !=null and departCode !=''">
+            and a.depart_code=#{departCode,jdbcType=VARCHAR}
+        </if>
+        <!--  客户编码  -->
+        <if test="custCode != null and custCode != ''">
+            and  a.cust_code=#{custCode,jdbcType=VARCHAR}
+        </if>
+        <!--  客户名称  -->
+        <if test="custName != null and custName != ''">
+            and  a.cust_name=#{custName,jdbcType=VARCHAR}
+        </if>
+        <!--  卡号编码  -->
+        <if test="cardCode != null and cardCode != ''">
+            and  a.card_code=#{cardCode,jdbcType=VARCHAR}
+        </if>
+        <!--  卡号名称  -->
+        <if test="cardName != null and cardName != ''">
+            and  a.card_name=#{cardName,jdbcType=VARCHAR}
+        </if>
+        <!--  对账状态 -->
+        <if test="status != null and status != ''">
+            and  a.status=#{status,jdbcType=TINYINT}
+        </if>
+        <!--  日期 对账数据范围截止日期-->
+        <if test="ddate != null and ddate != ''">
+            and  a.ddate=#{ddate,jdbcType=TIMESTAMP}
+        </if>
+        ORDER BY a.update_time desc
+    </select>
+    <update id="updateStaus" parameterType="com.metro.ccms.web.collection.domian.ReconciliationDO">
+        update tb_cust_reconciliation set status=1,updated_by=#{updatedBy,jdbcType=VARCHAR},update_time=now()
+        where id=#{id,jdbcType=BIGINT} and status=0
+    </update>
+    <select id="selReconShow" resultMap="ReconcilitionSelectResultMap">
+        select
+        <include refid="BaseSql"/>
+        from  tb_cust_reconciliation a
+        inner join sys_dept b on a.depart_code=b.dept_code
+        where a.id=#{id,jdbcType=BIGINT} and a.deleted = 0
+    </select>
+    <!-- 根据id查询PDF对账预览-->
+    <select id="selPdfInfo" resultMap="ReconcilitionSelectResultMap">
+    select a.cust_name,b.dept_name,b.account_name,b.account_bank,b.account_no,a.ddate,a.iar
+    from tb_cust_reconciliation a
+    left join sys_dept b on a.depart_code=b.dept_code
+    WHERE a.id=#{id,jdbcType=BIGINT} and a.deleted=0
+    </select>
+    <!--对账单新增查询范围-->
+   <select id="selRange" resultType="com.metro.ccms.web.httpsInterface.domain.BsegInterfaceDO"
+          parameterType="com.metro.ccms.web.httpsInterface.domain.BsegInterfaceDO">
+       select a.store_id,a.customer_id,a.wrbtr,a.bldat,a.zaldt,b.depart_code,b.card_name,b.cust_code,b.cust_name,
+       a.zterm,a.l_waers,a.budat
+       from tb_interface_bseg a
+       inner JOIN tb_cust_members b on a.store_id=b.store_code and a.customer_id=b.card_code
+       where a.store_id=#{storeId} and a.customer_id=#{customerId}
+       and DATE_FORMAT(a.bldat,'%Y-%m-%d') &lt; DATE_FORMAT(#{zaldt},'%Y-%m-%d')
+       and a.augdt is null
+       and a.wrbtr is not null
+   </select>
+    <select id="selIdue" resultType="java.lang.Double"
+            parameterType="com.metro.ccms.web.httpsInterface.domain.BsegInterfaceDO">
+        select  SUM(IFNULL(wrbtr,0))  from tb_interface_bseg
+        where TIMESTAMPDIFF(DAY,zaldt,DATE_FORMAT(#{zaldt},'%Y-%m-%d')) &gt;0
+        and DATE_FORMAT(bldat,'%Y-%m-%d') &lt;= DATE_FORMAT(#{zaldt},'%Y-%m-%d')
+        and augdt is null
+        and store_id=#{storeId} and customer_id=#{customerId} and wrbtr is not null
+    </select>
+    <select id="selIar" resultType="java.lang.Double"
+            parameterType="com.metro.ccms.web.httpsInterface.domain.BsegInterfaceDO">
+        select SUM(IFNULL(wrbtr,0)) from tb_interface_bseg
+        where  DATE_FORMAT(bldat,'%Y-%m-%d') &lt;DATE_FORMAT(#{zaldt,jdbcType=VARCHAR},'%Y-%m-%d')
+        and augdt is null
+		and store_id=#{storeId} and customer_id=#{customerId} and wrbtr is not null
+    </select>
+    <!--查询最大id-->
+    <select id="selmaxid" parameterType="com.metro.ccms.web.collection.domian.ReconciliationDO"
+            resultType="java.lang.String">
+        select max(id) as id from tb_cust_reconciliation limit 1
+    </select>
+    <!--对账主表保存-->
+    <insert id="saveRecon" parameterType="com.metro.ccms.web.collection.domian.ReconciliationDO">
+        insert into tb_cust_reconciliation(
+        created_by,create_time,application_no,ddate,depart_code,store_code,card_code,
+        card_name,cust_code,cust_name,iar,idue,cust_type
+        )values (
+        #{createdBy},now(),#{applicationNo},#{ddate},#{departCode},#{storeCode},#{cardCode},#{cardName},
+        #{custCode},#{custName},#{iar},#{idue},#{custType}
+        )
+    </insert>
+    <!--对账明细保存-->
+    <insert id="saveReconDetails" parameterType="com.metro.ccms.web.collection.domian.ReconDetailsDO">
+    insert into tb_cust_reconciliation_detail(
+    created_by,create_time,application_no,depart_code,store_code,card_code,card_name,cust_code,cust_name,
+    payment_term,csbvcode,dduedate,dsbvdate,standard_currency,amount,comments
+    )values (
+    #{createdBy},now(),#{applicationNo},#{departCode},#{storeCode},#{cardCode},#{cardName},#{custCode},
+    #{custName},#{paymentTerm},#{csbvcode},#{dduedate},#{dsbvdate},#{standardCurrency},#{amount},#{comments}
+    )
+    </insert>
+    <select id="getRecon" resultMap="ReconcilitionSelectResultMap">
+        select
+        <include refid="BaseSql"/> from tb_cust_reconciliation a
+        left join sys_dept b on a.depart_code=b.dept_code
+        where a.id=#{id}
+    </select>
+    <select id="getReconDetails" resultType="com.metro.ccms.web.collection.domian.ReconDetailsDO">
+    select id,card_code,card_name,csbvcode,dsbvdate,dduedate,standard_currency,
+    store_code,created_by,create_time,application_no,depart_code,cust_code,cust_name,amount
+    from tb_cust_reconciliation_detail
+    where application_no=#{applicationNo,jdbcType=VARCHAR} and deleted=0
+    </select>
+    <select id="getReconRecord" resultType="com.metro.ccms.web.collection.domian.ReconRecordDO">
+    select id,status,description,application_no,depart_code,store_code,created_by,create_time,deleted
+    from tb_cust_reconciliation_record
+    where application_no=#{applicationNo,jdbcType=VARCHAR} and deleted=0
+    </select>
+    <!--修改对账台账-->
+    <update id="updateTzInfo" parameterType="com.metro.ccms.web.collection.domian.CollectionRecordDO">
+    update tb_cust_reconciliation_record set status=#{status,jdbcType=TINYINT},description=#{description,jdbcType=VARCHAR},
+    updated_by=#{updatedBy,jdbcType=VARCHAR},update_time=now(),deleted=#{deleted,jdbcType=TINYINT}
+    where id=#{id,jdbcType=BIGINT}
+    </update>
+    <!--添加对账台账-->
+    <insert id="saveTzInfo" parameterType="com.metro.ccms.web.collection.domian.CollectionRecordDO">
+    insert into tb_cust_reconciliation_record(
+    status,description,application_no,depart_code,store_code,created_by,create_time
+    )values (
+    #{status,jdbcType=TINYINT},#{description,jdbcType=VARCHAR},#{applicationNo,jdbcType=VARCHAR},
+    #{departCode,jdbcType=VARCHAR},#{storeCode,jdbcType=VARCHAR},#{createdBy,jdbcType=VARCHAR},now()
+    )
+    </insert>
+    <!-- 根据id删除台账 -->
+    <update id="delTzInfo" parameterType="java.lang.String">
+    update tb_cust_reconciliation_record set deleted=1,updated_by=#{updatedBy,jdbcType=VARCHAR},update_time=now()
+    where id=#{id,jdbcType=BIGINT} and deleted=0
+    </update>
+</mapper>

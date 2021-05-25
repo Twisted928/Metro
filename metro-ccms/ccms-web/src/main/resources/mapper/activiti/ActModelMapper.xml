@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.activiti.mapper.ActModelMapper">
+
+	<select id="getModelRule" resultType="com.metro.ccms.web.activiti.domain.ActModelRuleDO">
+		select mid,des,expression FROM act_config_model_rule where mid=#{mid}
+	</select>
+
+	<delete id="deleteModelRule" parameterType="String">
+		delete from act_config_model_rule where mid = #{mid}
+	</delete>
+
+	<insert id="saveModelRule" parameterType="com.metro.ccms.web.activiti.domain.ActModelRuleDO">
+		insert into act_config_business
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mid != null">mid,</if>
+			<if test="des != null">des,</if>
+			<if test="expression != null">expression,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="mid != null">#{mid},</if>
+			<if test="des != null">#{des},</if>
+			<if test="expression != null">#{expression},</if>
+		</trim>
+	</insert>
+
+	<select id="selectList" resultType="com.metro.ccms.web.activiti.domain.ActBusinessDO">
+		select * from act_config_business
+	</select>
+	
+	<update id="updateActBusiness">
+		update act_config_business
+		<set>
+			<if test="name != null">name=#{name},</if>
+			<if test="actModelId != null">act_model_id=#{actModelId}</if>
+		</set>
+		where mkey=#{mkey}
+	</update>
+
+
+	<!--New-->
+	<select id="getBusinessByKey" resultType="com.metro.ccms.web.activiti.domain.ActBusinessDO">
+		select id,name,mkey,act_model_id,role_id from act_config_business where mkey=#{mkey}
+	</select>
+
+	<insert id="insertActBusiness" parameterType="com.metro.ccms.web.activiti.domain.ActBusinessDO" keyProperty="id">
+		insert into act_config_business
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">name,</if>
+			<if test="mkey != null">mkey,</if>
+			<if test="actModelId != null">act_model_id,</if>
+			<if test="roleId != null">role_id,</if>
+			<if test="createdBy != null">created_by,</if>
+			<if test="updateTime != null">update_time,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">#{name},</if>
+			<if test="mkey != null">#{mkey},</if>
+			<if test="actModelId != null">#{actModelId},</if>
+			<if test="roleId != null">#{roleId},</if>
+			<if test="createdBy != null">#{createdBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+		</trim>
+	</insert>
+
+	<select id="getBusinessList" parameterType="com.metro.ccms.web.activiti.query.ModelQuery" resultType="com.metro.ccms.web.activiti.domain.ActBusinessDO">
+		select id,name,mkey,act_model_id,role_id,created_by,create_time from act_config_business
+		<where>
+				and act_model_id is not null
+			<if test="name != null and name != ''">
+				and name like '%${name}%'
+			</if>
+			<if test="mkey != null and mkey != ''">
+				and mkey = #{mkey}
+			</if>
+			<if test="createdBy != null and createdBy != ''">
+				and created_by like '%${createdBy}%'
+			</if>
+			<if test="beginTime != null">
+				and date_format(create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+			</if>
+			<if test="endTime != null">
+				and date_format(create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+			</if>
+		</where>
+	</select>
+
+	<select id="getRoleNameById" resultType="String">
+		select role_name from sys_role
+		where role_id in
+		<foreach collection="strs" item="item"
+				 index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+
+</mapper>

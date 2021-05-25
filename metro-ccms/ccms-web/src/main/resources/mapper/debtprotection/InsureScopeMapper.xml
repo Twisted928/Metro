@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.debtprotection.mapper.InsureScopeMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.debtprotection.vo.InsureScopeVO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="store_code" jdbcType="VARCHAR" property="storeCode"/>
+        <result column="polic_id" jdbcType="VARCHAR" property="policId"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+        <result column="depart_code" jdbcType="VARCHAR" property="departCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , store_code, polic_id, created_by, create_time, updated_by, update_time, `status`,
+    deleted, item1, item2, item3, item4, item5, item6, item7, item8, item9, depart_code
+    </sql>
+
+    <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.metro.ccms.web.debtprotection.vo.InsureScopeVO"
+            useGeneratedKeys="true">
+        insert into tb_sf_insure_scope
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeCode != null and storeCode != ''">
+                store_code,
+            </if>
+            <if test="policId != null and policId != ''">
+                polic_id,
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                created_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                updated_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+            <if test="departCode != null and departCode != ''">
+                depart_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeCode != null and storeCode != ''">
+                #{storeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="policId != null and policId != ''">
+                #{policId,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=TINYINT},
+            </if>
+            <if test="departCode != null and departCode != ''">
+                #{departCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.metro.ccms.web.debtprotection.vo.InsureScopeVO">
+        update tb_sf_insure_scope
+        <set>
+            <if test="storeCode != null and storeCode != ''">
+                store_code = #{storeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="policId != null and policId != ''">
+                polic_id = #{policId,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                created_by = #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                updated_by = #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=TINYINT},
+            </if>
+            <if test="departCode != null and departCode != ''">
+                depart_code = #{departCode,jdbcType=VARCHAR},
+            </if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        where polic_id = #{policId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="delete" parameterType="java.lang.String">
+        update tb_sf_insure_scope
+        <set>
+            deleted = '1'
+        </set>
+        where polic_id = #{policId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateStatus" parameterType="com.metro.ccms.web.debtprotection.vo.InsurePolicyVO">
+        update tb_sf_insure_scope
+        <set>
+            `status` = #{status,jdbcType=TINYINT}
+        </set>
+        where polic_id = #{id,jdbcType=BIGINT}
+    </update>
+    <delete id="deleteByPolicId" parameterType="java.lang.String">
+        delete
+        from tb_sf_insure_scope
+        where polic_id = #{policId,jdbcType=VARCHAR}
+    </delete>
+    <select id="getByPolicId" resultType="com.metro.ccms.web.debtprotection.vo.InsureScopeVO">
+        SELECT
+        b.dept_code AS storeCode,
+        b.dept_name AS compName
+        FROM
+        tb_sf_insure_scope a
+        LEFT JOIN sys_dept b ON a.store_code = b.dept_code
+        WHERE
+        a.polic_id = #{policId,jdbcType=VARCHAR}
+        and a.deleted = '0'
+        and
+        a.store_code in
+        <foreach collection="storeCodeList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+    <select id="getlist" resultType="com.metro.ccms.web.debtprotection.domian.InsureScopeDO">
+        select store_code AS storeCode
+        from tb_sf_insure_scope
+        where polic_id = #{policId,jdbcType=VARCHAR}
+    </select>
+    <select id="getByPolicyID" resultType="java.lang.String">
+        select store_code from tb_sf_insure_scope where deleted = 0 and
+        polic_id in
+        <foreach collection="id" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.model.mapper.RuleModelInfoMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.model.domain.RuleModelInfoDO">
+        <id property="id" column="id"  />
+        <result column="name" property="name" />
+        <result column="description" property="description" />
+        <result column="expiry_date" property="expirydate" />
+        <result column="remark" property="remark" />
+        <result column="status" property="status" />
+        <result column="deleted" property="deleted" />
+        <result column="created_by" property="createdBy" />
+        <result column="create_time" property="createTime" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <select id="get" resultType="com.metro.ccms.web.model.domain.RuleModelInfoDO">
+		select id,name,description,expiry_date,remark,created_by,create_time,updated_by,update_time,status,deleted
+        from rulemodel_info where id = #{id}
+	</select>
+
+    <select id="list" parameterType="com.metro.ccms.web.model.query.RuleModelInfoQuery" resultType="com.metro.ccms.web.model.domain.RuleModelInfoDO">
+        select id,name,description,expiry_date,remark,created_by,create_time,updated_by,update_time,status,deleted
+        from rulemodel_info
+        <where>
+            and deleted=0
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="name != null and name != ''">and name like CONCAT(#{name},'%')  </if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+        </where>
+        order by id
+    </select>
+
+    <insert id="save" parameterType="com.metro.ccms.web.model.domain.RuleModelInfoDO" keyProperty="id">
+		insert into rulemodel_info
+		(
+			name,description,expiry_date,remark,created_by,create_time
+		)
+		values
+		(
+			#{name}, 
+			#{description},
+			#{expirydate},
+			#{remark},
+			#{createdBy},
+			now()
+		)
+	</insert>
+    <insert id="addindex" parameterType="com.metro.ccms.web.model.domain.RuleModelIndexInfoDO">
+		insert into rulemodel_info_index
+		(
+			model_id,index_id,created_by,create_time
+		)
+		values
+		(
+			#{modelid},
+			#{indexid},
+			#{createdBy},
+			now()
+		)
+	</insert>
+    <select id="selindex" parameterType="com.metro.ccms.web.model.query.RuleModelIndexQuery"
+        resultType="com.metro.ccms.web.model.domain.RuleModelIndexInfoDO">
+        select id,
+        model_id as modelid,
+        index_id as indexid,
+        created_by as createdBy,
+        create_time as createTime,
+        updated_by as updatedBy,
+        update_time as updateTime,
+        status,
+        deleted,
+        method from rulemodel_info_index
+        <where>
+            and deleted=0
+            <if test="modelid != null"> and model_id=#{modelid}</if>
+        </where>
+    </select>
+    <update id="update" parameterType="com.metro.ccms.web.model.domain.RuleModelInfoDO">
+        update rulemodel_info
+        <set>
+            `update_time` = now(),
+            <if test="name != null">`name` = #{name},</if>
+            <if test="description != null">`description` = #{description},</if>
+            <if test="expirydate != null">expiry_date = #{expirydate},</if>
+            <if test="remark != null">`remark` = #{remark},</if>
+            <if test="updatedBy != null">`updated_by` = #{updatedBy},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="remove">
+		update rulemodel_info set deleted='1' where id = #{id}
+	</update>
+
+</mapper>

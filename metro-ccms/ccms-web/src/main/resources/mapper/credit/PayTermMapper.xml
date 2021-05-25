@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.credit.mapper.PayTermMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.credit.domain.PayTermDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+        <result column="settle_type" jdbcType="VARCHAR" property="settleType"/>
+        <result column="payment_desc" jdbcType="VARCHAR" property="paymentDesc"/>
+        <result column="payment_code" jdbcType="VARCHAR" property="paymentCode"/>
+        <result column="payment_days" jdbcType="INTEGER" property="paymentDays"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, created_by, create_time, updated_by, update_time, `status`, deleted, item1, item2,
+        item3, item4, item5, item6, item7, item8, item9, settle_type, payment_desc, payment_code,
+        payment_days
+    </sql>
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_credit_payterm
+        where deleted = 0
+        <trim suffixOverrides="and | or">
+            <if test="settleType != null and settleType != ''">
+                and settle_type = #{settleType,jdbcType=VARCHAR}
+            </if>
+            <if test="paymentDesc != null and paymentDesc != ''">
+                and payment_desc like concat('%',#{paymentDesc,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="paymentCode != null">
+                and payment_code = #{paymentCode,jdbcType=VARCHAR}
+            </if>
+        </trim>
+        order by create_time desc
+    </select>
+    <select id="getCode" resultType="java.lang.Integer">
+        select count(0)
+        from tb_credit_payterm
+        where payment_code = #{paymentCode,jdbcType=VARCHAR}
+          and deleted = 0
+    </select>
+    <select id="getUnique" resultType="java.lang.Integer">
+        select count(0)
+        from tb_credit_payterm
+        where deleted = 0
+          and settle_type = #{settleType,jdbcType=VARCHAR}
+          and payment_days = #{paymentDays,jdbcType=INTEGER}
+    </select>
+    <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.metro.ccms.web.credit.domain.PayTermDO"
+            useGeneratedKeys="true">
+        insert into tb_credit_payterm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null and createdBy != ''">
+                created_by,
+            </if>
+            <if test="settleType != null and settleType != ''">
+                settle_type,
+            </if>
+            <if test="paymentDesc != null and paymentDesc != ''">
+                payment_desc,
+            </if>
+            <if test="paymentCode != null">
+                payment_code,
+            </if>
+            <if test="paymentDays != null">
+                payment_days,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null and createdBy != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="settleType != null and settleType != ''">
+                #{settleType,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentDesc != null and paymentDesc != ''">
+                #{paymentDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentCode != null">
+                #{paymentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentDays != null">
+                #{paymentDays,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.metro.ccms.web.credit.domain.PayTermDO">
+        update tb_credit_payterm
+        <set>
+            <if test="updatedBy != null">
+                updated_by = #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="settleType != null and settleType != ''">
+                settle_type = #{settleType,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentDesc != null and paymentDesc != ''">
+                payment_desc = #{paymentDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentCode != null">
+                payment_code = #{paymentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentDays != null">
+                payment_days = #{paymentDays,jdbcType=INTEGER},
+            </if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="delete" parameterType="com.metro.ccms.web.credit.domain.PayTermDO">
+        update tb_credit_payterm
+        set deleted = 1
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

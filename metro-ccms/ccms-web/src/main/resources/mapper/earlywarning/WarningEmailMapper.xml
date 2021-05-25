@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.earlywarning.mapper.WarningEmailMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.earlywarning.vo.WarningEmailVO">
+        <id property="id" column="id"  />
+        <result column="title" property="title" />
+        <result column="text" property="text" />
+        <result column="user_name" property="username" />
+        <result column="role_name" property="rolename" />
+        <result column="source" property="source" />
+        <result column="application_no" property="applicationno" />
+        <result column="ddate" property="ddate" />
+        <result column="mod_code" property="modcode" />
+        <result column="item1" property="item1" />
+        <result column="item2" property="item2" />
+        <result column="item3" property="item3" />
+        <result column="item4" property="item4" />
+        <result column="item5" property="item5" />
+        <result column="item6" property="item6" />
+        <result column="item7" property="item7" />
+        <result column="item8" property="item8" />
+        <result column="item9" property="item9" />
+    </resultMap>
+    <sql id="Base_Column_List">
+         id,
+        title,
+        text,
+        user_name,
+        role_name,
+        source,
+        application_no,
+        ddate,
+        mod_code,
+        item1,
+        item2,
+        item3,
+        item4,
+        item5,
+        item6,
+        item7,
+        item8,
+        item9
+  </sql>
+    <select id="pagesel" parameterType="com.metro.ccms.web.earlywarning.query.WarningEmailQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_basic_email
+        where 1=1
+        <if test="title != null and title != ''">and title like CONCAT('%', #{title},'%')</if>
+        <if test="username != null and username != ''">and user_name = #{username}</if>
+            <if test="rolename != null and rolename != ''">and role_name like CONCAT('%',#{rolename},'%') </if>
+        <if test="ddate != null and ddate != ''">
+            <![CDATA[ and DATE_FORMAT(ddate,'%Y-%m-%d') = DATE_FORMAT(#{ddate},'%Y-%m-%d')]]>
+        </if>
+    </select>
+
+</mapper>

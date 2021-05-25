@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.system.mapper.SysBasicExchangeMapper">
+
+    <resultMap type="com.metro.ccms.system.domain.SysBasicExchange" id="TbBasicExchangeResult">
+        <result property="id"    column="id"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="currency"    column="currency"    />
+        <result property="currencyDh"    column="currency_dh"    />
+        <result property="month"    column="month"    />
+        <result property="exchangeRate" column="exchange_rate"/>
+        <result property="item1"    column="item1"    />
+        <result property="item2"    column="item2"    />
+        <result property="item3"    column="item3"    />
+        <result property="item4"    column="item4"    />
+        <result property="item5"    column="item5"    />
+        <result property="item6"    column="item6"    />
+        <result property="item7"    column="item7"    />
+        <result property="item8"    column="item8"    />
+        <result property="item9"    column="item9"    />
+    </resultMap>
+
+    <sql id="selectTbBasicExchangeVo">
+        select id, created_by, create_time, updated_by, update_time, status, currency, currency_dh, exchange_rate, month, item1, item2, item3, item4, item5, item6, item7, item8, item9 from tb_basic_exchange
+    </sql>
+
+    <select id="selectTbBasicExchangeList" parameterType="com.metro.ccms.system.domain.SysBasicExchange" resultMap="TbBasicExchangeResult">
+        <include refid="selectTbBasicExchangeVo"/>
+        <where>
+            <if test="createdBy != null  and createdBy != ''"> and created_by = #{createdBy}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="currency != null  and currency != ''"> and currency = #{currency}</if>
+            <if test="currencyDh != null  and currencyDh != ''"> and currency_dh = #{currencyDh}</if>
+            <if test="month != null  and month != ''"> and month = #{month}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectTbBasicExchangeById" parameterType="Long" resultMap="TbBasicExchangeResult">
+        <include refid="selectTbBasicExchangeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbBasicExchange" parameterType="com.metro.ccms.system.domain.SysBasicExchange" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_basic_exchange
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null">created_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updatedBy != null">updated_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="currency != null">currency,</if>
+            <if test="currencyDh != null">currency_dh,</if>
+            <if test="month != null">month,</if>
+            <if test="exchangeRate != null">exchange_rate,</if>
+            <if test="item1 != null">item1,</if>
+            <if test="item2 != null">item2,</if>
+            <if test="item3 != null">item3,</if>
+            <if test="item4 != null">item4,</if>
+            <if test="item5 != null">item5,</if>
+            <if test="item6 != null">item6,</if>
+            <if test="item7 != null">item7,</if>
+            <if test="item8 != null">item8,</if>
+            <if test="item9 != null">item9,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="currency != null">#{currency},</if>
+            <if test="currencyDh != null">#{currencyDh},</if>
+            <if test="month != null">#{month},</if>
+            <if test="exchangeRate != null">#{exchangeRate},</if>
+            <if test="item1 != null">#{item1},</if>
+            <if test="item2 != null">#{item2},</if>
+            <if test="item3 != null">#{item3},</if>
+            <if test="item4 != null">#{item4},</if>
+            <if test="item5 != null">#{item5},</if>
+            <if test="item6 != null">#{item6},</if>
+            <if test="item7 != null">#{item7},</if>
+            <if test="item8 != null">#{item8},</if>
+            <if test="item9 != null">#{item9},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbBasicExchange" parameterType="com.metro.ccms.system.domain.SysBasicExchange">
+        update tb_basic_exchange
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="currency != null">currency = #{currency},</if>
+            <if test="currencyDh != null">currency_dh = #{currencyDh},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="exchangeRate != null">exchange_rate = #{exchangeRate},</if>
+            <if test="item1 != null">item1 = #{item1},</if>
+            <if test="item2 != null">item2 = #{item2},</if>
+            <if test="item3 != null">item3 = #{item3},</if>
+            <if test="item4 != null">item4 = #{item4},</if>
+            <if test="item5 != null">item5 = #{item5},</if>
+            <if test="item6 != null">item6 = #{item6},</if>
+            <if test="item7 != null">item7 = #{item7},</if>
+            <if test="item8 != null">item8 = #{item8},</if>
+            <if test="item9 != null">item9 = #{item9},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbBasicExchangeById" parameterType="Long">
+        delete from tb_basic_exchange where id = #{id}
+    </delete>
+
+    <delete id="deleteTbBasicExchangeByIds" parameterType="String">
+        delete from tb_basic_exchange where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

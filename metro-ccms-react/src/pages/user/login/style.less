@@ -1,0 +1,227 @@
+@import '~antd/es/style/themes/default.less';
+
+.wrap {
+  .topHeader {
+    width: 100%;
+    height: 60px;
+    background: #20317f;
+    padding-left: 120px;
+    line-height: 60px;
+    span {
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      line-height: 24px;
+      color: #ffffff;
+      margin-left: 10px;
+    }
+  }
+  .container {
+    max-width: 1200px;
+    width: 1200px;
+    height: 100%;
+    margin: 0px auto;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e1e2ed;
+    padding-bottom: 122px;
+    .leftWrap {
+      width: 528px;
+      padding-top: 123px;
+      .descAndImg {
+        width: 100%;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &:not(:nth-child(1)) {
+          margin-top: 50px;
+        }
+        .svgStyle {
+          width: 72px;
+          height: 72px;
+          img {
+            width: 72px;
+          }
+        }
+        .desc {
+          width: 432px;
+          margin-left: 24px;
+          div:first-child {
+            font-size: 16px;
+            font-family: PingFang SC;
+            font-weight: 600;
+            line-height: 24px;
+            color: rgba(0, 0, 0, 0.85);
+            margin-bottom: 8px;
+          }
+          div:nth-child(2) {
+            font-size: 12px;
+            font-family: PingFang SC;
+            font-weight: 500;
+            line-height: 24px;
+            color: rgba(0, 0, 0, 0.65);
+          }
+        }
+      }
+    }
+    .rightWrap {
+      width: 600px;
+      height: 560px;
+      background: #ffffff;
+      box-shadow: 0px 6px 10px rgba(119, 124, 136, 0.16);
+      margin-top: 64px;
+      padding: 84px 116px;
+      .userpassStyle {
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: 600;
+        line-height: 24px;
+        color: #000000;
+        margin: 16px 0px 32px 0px;
+      }
+      .loginfree {
+        font-size: 14px;
+        font-family: PingFangSC-Regular;
+        line-height: 22px;
+        color: rgba(0, 0, 0, 0.65);
+      }
+      .forgetPass {
+        font-size: 14px;
+        font-family: PingFangSC-Regular;
+        line-height: 22px;
+        color: #333fff;
+        float: right;
+      }
+      :global {
+        .ant-form-item-required {
+          font-size: 16px;
+          font-family: PingFangSC-Regular;
+          line-height: 24px;
+          color: rgba(0, 0, 0, 0.65);
+        }
+        // .ant-form .ant-form-item {
+        //   height: 100px;
+        // }
+      }
+    }
+  }
+}
+
+.wrapPass {
+  .topHeader {
+    width: 100%;
+    height: 60px;
+    background: #20317f;
+    padding-left: 120px;
+    line-height: 60px;
+    span {
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      line-height: 24px;
+      color: #ffffff;
+      margin-left: 10px;
+    }
+  }
+  .formMsg {
+    padding: 24px;
+    background: #f2f1f8;
+  }
+}
+
+// .lang {
+//   width: 100%;
+//   height: 40px;
+//   line-height: 44px;
+//   text-align: right;
+//   :global(.ant-dropdown-trigger) {
+//     margin-right: 24px;
+//   }
+// }
+
+// .content {
+//   flex: 1;
+//   padding: 32px 0;
+// }
+
+// @media (min-width: @screen-md-min) {
+//   .container {
+//     background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
+//     background-repeat: no-repeat;
+//     background-position: center 110px;
+//     background-size: 100%;
+//   }
+
+//   .content {
+//     padding: 32px 0 24px;
+//   }
+// }
+
+// .top {
+//   text-align: center;
+// }
+
+// .header {
+//   a {
+//     text-decoration: none;
+//   }
+// }
+
+// .logo {
+//   height: 120px;
+//   // margin-right: 16px;
+//   // vertical-align: top;
+// }
+
+// .title {
+//   position: relative;
+//   top: 2px;
+//   color: @heading-color;
+//   font-weight: 600;
+//   font-size: 33px;
+//   font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+// }
+
+// .desc {
+//   margin-top: 12px;
+//   margin-bottom: 40px;
+//   color: @text-color-secondary;
+//   font-size: @font-size-base;
+// }
+
+// .main {
+//   width: 368px;
+//   margin: 0 auto;
+//   @media screen and (max-width: @screen-sm) {
+//     width: 95%;
+//   }
+
+//   .icon {
+//     margin-left: 16px;
+//     color: rgba(0, 0, 0, 0.2);
+//     font-size: 24px;
+//     vertical-align: middle;
+//     cursor: pointer;
+//     transition: color 0.3s;
+
+//     &:hover {
+//       color: @primary-color;
+//     }
+//   }
+
+//   .other {
+//     margin-top: 24px;
+//     line-height: 22px;
+//     text-align: left;
+
+//     .register {
+//       float: right;
+//     }
+//   }
+
+//   :global {
+//     .antd-pro-login-submit {
+//       width: 100%;
+//       margin-top: 24px;
+//     }
+//   }
+// }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.contract.mapper.ContracttemplateMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.contract.vo.ContracttemplateVO">
+        <id property="id" column="id"  />
+        <result column="contract_text" property="contracttext" />
+        <result column="contract_type" property="contracttype" />
+        <result column="contract_temp" property="contracttemp" />
+        <result column="status" property="status" />
+        <result column="deleted" property="deleted" />
+        <result column="created_by" property="createdby" />
+        <result column="create_time" property="createtime" />
+        <result column="updated_by" property="updatedby" />
+        <result column="update_time" property="updatetime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+         id,
+        contract_text,
+        contract_type,
+        contract_temp,
+        status,
+        deleted,
+        created_by,
+        create_time,
+        updated_by,
+        update_time
+  </sql>
+    <select id="pagesel" parameterType="com.metro.ccms.web.contract.query.ContracttemplateQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_contract_template
+        where deleted='0'
+        <if test="contracttemp != null and contracttemp != ''">and contract_temp like CONCAT('%', #{contracttemp},'%')</if>
+        <if test="status != null and status != ''">and status = #{status}</if>
+    </select>
+    <select id="selbyid" parameterType="com.metro.ccms.web.contract.query.ContracttemplateQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_contract_template
+        where deleted='0'
+        <if test="id != null and id != ''">and id =#{id}</if>
+    </select>
+
+</mapper>

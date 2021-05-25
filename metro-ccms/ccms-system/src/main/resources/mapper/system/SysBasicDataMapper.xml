@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.system.mapper.SysBasicDataMapper">
+    <resultMap type="com.metro.ccms.common.core.domain.entity.SysBasicData" id="TbBasicDataResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentType"    column="parent_type"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="source"    column="source"    />
+        <result property="item1"    column="item1"    />
+        <result property="item2"    column="item2"    />
+        <result property="item3"    column="item3"    />
+        <result property="item4"    column="item4"    />
+        <result property="item5"    column="item5"    />
+        <result property="item6"    column="item6"    />
+        <result property="item7"    column="item7"    />
+        <result property="item8"    column="item8"    />
+        <result property="item9"    column="item9"    />
+        <result property="description"    column="description"    />
+        <result property="ctype"    column="ctype"    />
+        <result property="validFrom"    column="valid_from"    />
+        <result property="validTo"    column="valid_to"    />
+    </resultMap>
+
+    <sql id="selectTbBasicDataVo">
+        select id, parent_id, parent_type, created_by, create_time, updated_by, update_time, status, deleted, source, item1, item2, item3, item4, item5, item6, item7, item8, item9, description, ctype, valid_from, valid_to from tb_basic_data
+    </sql>
+
+    <select id="selectTbBasicDataList" parameterType="com.metro.ccms.common.core.domain.entity.SysBasicData" resultMap="TbBasicDataResult">
+        <include refid="selectTbBasicDataVo"/>
+        <where>
+            and deleted=0
+            <if test="createdBy != null  and createdBy != ''"> and created_by = #{createdBy}</if>
+            <if test="updatedBy != null  and updatedBy != ''"> and updated_by = #{updatedBy}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="source != null  and source != ''"> and source = #{source}</if>
+            <if test="description != null  and description != ''"> and description like '%${description}%'</if>
+            <if test="ctype != null  and ctype != ''"> and ctype = #{ctype}</if>
+            <if test="validFrom != null "> and valid_from = #{validFrom}</if>
+            <if test="validTo != null "> and valid_to = #{validTo}</if>
+        </where>
+    </select>
+
+    <select id="selectTbBasicDataById" parameterType="Long" resultMap="TbBasicDataResult">
+        <include refid="selectTbBasicDataVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbBasicData" parameterType="com.metro.ccms.common.core.domain.entity.SysBasicData" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_basic_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="parentType != null">parent_type,</if>
+            <if test="createdBy != null">created_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="source != null">source,</if>
+            <if test="item1 != null">item1,</if>
+            <if test="item2 != null">item2,</if>
+            <if test="item3 != null">item3,</if>
+            <if test="item4 != null">item4,</if>
+            <if test="item5 != null">item5,</if>
+            <if test="item6 != null">item6,</if>
+            <if test="item7 != null">item7,</if>
+            <if test="item8 != null">item8,</if>
+            <if test="item9 != null">item9,</if>
+            <if test="description != null">description,</if>
+            <if test="ctype != null">ctype,</if>
+            <if test="validFrom != null">valid_from,</if>
+            <if test="validTo != null">valid_to,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="parentType != null">#{parentType},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createTime != null">CURRENT_TIMESTAMP,</if>
+            <if test="status != null">#{status},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="source != null">#{source},</if>
+            <if test="item1 != null">#{item1},</if>
+            <if test="item2 != null">#{item2},</if>
+            <if test="item3 != null">#{item3},</if>
+            <if test="item4 != null">#{item4},</if>
+            <if test="item5 != null">#{item5},</if>
+            <if test="item6 != null">#{item6},</if>
+            <if test="item7 != null">#{item7},</if>
+            <if test="item8 != null">#{item8},</if>
+            <if test="item9 != null">#{item9},</if>
+            <if test="description != null">#{description},</if>
+            <if test="ctype != null">#{ctype},</if>
+            <if test="validFrom != null">#{validFrom},</if>
+            <if test="validTo != null">#{validTo},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbBasicData" parameterType="com.metro.ccms.common.core.domain.entity.SysBasicData">
+        update tb_basic_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="parentType != null">parent_type = #{parentType},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="source != null">source = #{source},</if>
+            <if test="item1 != null">item1 = #{item1},</if>
+            <if test="item2 != null">item2 = #{item2},</if>
+            <if test="item3 != null">item3 = #{item3},</if>
+            <if test="item4 != null">item4 = #{item4},</if>
+            <if test="item5 != null">item5 = #{item5},</if>
+            <if test="item6 != null">item6 = #{item6},</if>
+            <if test="item7 != null">item7 = #{item7},</if>
+            <if test="item8 != null">item8 = #{item8},</if>
+            <if test="item9 != null">item9 = #{item9},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="ctype != null">ctype = #{ctype},</if>
+            <if test="validFrom != null">valid_from = #{validFrom},</if>
+            <if test="validTo != null">valid_to = #{validTo},</if>
+            <if test="status != null">status = #{status},</if>
+            update_time = CURRENT_TIMESTAMP
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbBasicDataById" parameterType="Long">
+        delete from tb_basic_data where id = #{id}
+    </delete>
+
+    <delete id="deleteTbBasicDataByIds" parameterType="String">
+        delete from tb_basic_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getBasicDataBySelect" resultType="int">
+        select count(*) from tb_basic_data
+        <where>
+            and status=1 and deleted=0
+            <if test="ctype!=null and ctype!=''">
+                and ctype=#{ctype}
+            </if>
+            <if test="description!=null and description!=''">
+                and description=#{description}
+            </if>
+        </where>
+    </select>
+
+    <select id="hasChildById" parameterType="Long" resultType="int">
+		select count(1) from tb_basic_data
+		where status=1 and deleted=0 and parent_id = #{id} limit 1
+	</select>
+
+</mapper>

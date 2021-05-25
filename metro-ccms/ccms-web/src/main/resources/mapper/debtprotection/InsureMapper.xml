@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.debtprotection.mapper.InsureMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.debtprotection.domian.InsureDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="comp_code" jdbcType="VARCHAR" property="compCode"/>
+        <result column="comp_name" jdbcType="VARCHAR" property="compName"/>
+        <result column="buyerno" jdbcType="VARCHAR" property="buyerno"/>
+        <result column="cust_code" jdbcType="VARCHAR" property="custCode"/>
+        <result column="cust_name" jdbcType="VARCHAR" property="custName"/>
+        <result column="policyno" jdbcType="VARCHAR" property="policyno"/>
+        <result column="credit_level" jdbcType="VARCHAR" property="creditLevel"/>
+        <result column="quota" jdbcType="DECIMAL" property="quota"/>
+        <result column="quota_days" jdbcType="INTEGER" property="quotaDays"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+        <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="contract_no" jdbcType="VARCHAR" property="contractNo"/>
+        <result column="lcno" jdbcType="VARCHAR" property="lcno"/>
+        <result column="body" jdbcType="VARCHAR" property="body"/>
+        <result column="polic_id" jdbcType="BIGINT" property="policId"/>
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo"/>
+        <result column="invoicesum" jdbcType="DECIMAL" property="invoicesum"/>
+        <result column="invoicedate" jdbcType="TIMESTAMP" property="invoicedate"/>
+        <result column="qztype" jdbcType="VARCHAR" property="qztype"/>
+        <result column="clientno" jdbcType="VARCHAR" property="clientno"/>
+        <result column="btime" jdbcType="TIMESTAMP" property="btime"/>
+        <result column="etime" jdbcType="TIMESTAMP" property="etime"/>
+        <result column="insuresum" jdbcType="DECIMAL" property="insuresum"/>
+        <result column="paymode" jdbcType="VARCHAR" property="paymode"/>
+        <result column="transportdate" jdbcType="TIMESTAMP" property="transportdate"/>
+        <result column="code10" jdbcType="VARCHAR" property="code10"/>
+        <result column="goodsname" jdbcType="VARCHAR" property="goodsname"/>
+        <result column="employeename" jdbcType="VARCHAR" property="employeename"/>
+        <result column="ifoversea" jdbcType="TINYINT" property="ifoversea"/>
+        <result column="premiumrate" jdbcType="DECIMAL" property="premiumrate"/>
+        <result column="premium" jdbcType="DECIMAL" property="premium"/>
+        <result column="dollarrate" jdbcType="DECIMAL" property="dollarrate"/>
+        <result column="country_code" jdbcType="VARCHAR" property="countryCode"/>
+    </resultMap>
+    <resultMap id="Map" type="com.metro.ccms.web.debtprotection.vo.InsuranceManagementVO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="comp_code" jdbcType="VARCHAR" property="compCode"/>
+        <result column="comp_name" jdbcType="VARCHAR" property="compName"/>
+        <result column="buyerno" jdbcType="VARCHAR" property="buyerno"/>
+        <result column="cust_code" jdbcType="VARCHAR" property="custCode"/>
+        <result column="cust_name" jdbcType="VARCHAR" property="custName"/>
+        <result column="policyno" jdbcType="VARCHAR" property="policyno"/>
+        <result column="credit_level" jdbcType="VARCHAR" property="creditLevel"/>
+        <result column="quota" jdbcType="DECIMAL" property="quota"/>
+        <result column="quota_days" jdbcType="INTEGER" property="quotaDays"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+        <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="contract_no" jdbcType="VARCHAR" property="contractNo"/>
+        <result column="lcno" jdbcType="VARCHAR" property="lcno"/>
+        <result column="body" jdbcType="VARCHAR" property="body"/>
+        <result column="polic_id" jdbcType="BIGINT" property="policId"/>
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo"/>
+        <result column="invoicesum" jdbcType="DECIMAL" property="invoicesum"/>
+        <result column="invoicedate" jdbcType="TIMESTAMP" property="invoicedate"/>
+        <result column="qztype" jdbcType="VARCHAR" property="qztype"/>
+        <result column="clientno" jdbcType="VARCHAR" property="clientno"/>
+        <result column="btime" jdbcType="TIMESTAMP" property="btime"/>
+        <result column="etime" jdbcType="TIMESTAMP" property="etime"/>
+        <result column="insuresum" jdbcType="DECIMAL" property="insuresum"/>
+        <result column="paymode" jdbcType="VARCHAR" property="paymode"/>
+        <result column="transportdate" jdbcType="TIMESTAMP" property="transportdate"/>
+        <result column="code10" jdbcType="VARCHAR" property="code10"/>
+        <result column="goodsname" jdbcType="VARCHAR" property="goodsname"/>
+        <result column="employeename" jdbcType="VARCHAR" property="employeename"/>
+        <result column="ifoversea" jdbcType="TINYINT" property="ifoversea"/>
+        <result column="premiumrate" jdbcType="DECIMAL" property="premiumrate"/>
+        <result column="premium" jdbcType="DECIMAL" property="premium"/>
+        <result column="dollarrate" jdbcType="DECIMAL" property="dollarrate"/>
+        <result column="country_code" jdbcType="VARCHAR" property="countryCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , comp_code, comp_name, buyerno, cust_code, cust_name, policyno, credit_level,
+    quota, quota_days, created_by, create_time, updated_by, update_time, `status`, item1, 
+    item2, item3, item4, item5, item6, item7, item8, item9, deleted, `timestamp`, reason, 
+    contract_no, lcno, body, polic_id, invoice_no, invoicesum, invoicedate, qztype, clientno, 
+    btime, etime, insuresum, paymode, transportdate, code10, goodsname, employeename, 
+    ifoversea, premiumrate, premium, dollarrate, country_code
+    </sql>
+
+    <select id="list" resultMap="Map">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_insure
+        where 1 = 1
+        <trim suffixOverrides="and | or">
+            <if test="custCode != null and custCode != ''">
+                and cust_code = #{custCode,jdbcType=VARCHAR}
+            </if>
+            <if test="custName != null and custName != ''">
+                and cust_name like concat('%',#{custName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="beginDate != null and endDate != null">
+                and invoicedate BETWEEN #{beginDate} AND #{endDate}
+            </if>
+        </trim>
+        order by create_time desc
+    </select>
+    <select id="listInsuredPolicys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_insure
+        where 1 = 1
+        <trim suffixOverrides="and | or">
+            <if test="insureDO.custCode != null and insureDO.custCode != ''">
+                and cust_code = #{insureDO.custCode,jdbcType=VARCHAR}
+            </if>
+            <if test="insureDO.custName != null and insureDO.custName != ''">
+                and cust_name like concat('%',#{insureDO.custName,jdbcType=VARCHAR},'%')
+            </if>
+        </trim>
+        <if test="id!=null and id.size()&gt; 0">
+            and id not in
+            <foreach collection="id" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="getByCompCode" resultType="java.lang.Integer">
+        select count(0) from tb_sf_insure where comp_code = #{compCode,jdbcType=VARCHAR}
+    </select>
+    <select id="getById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_insure
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="getByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_insure
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <insert id="save" keyColumn="id" keyProperty="id"
+            parameterType="com.metro.ccms.web.debtprotection.domian.InsureDO">
+        insert into tb_sf_insure
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null and compCode != ''">
+                comp_code,
+            </if>
+            <if test="policyno != null and policyno != ''">
+                policyno,
+            </if>
+            <if test="custCode != null and custCode != ''">
+                cust_code,
+            </if>
+            <if test="custName != null and custName != ''">
+                cust_name,
+            </if>
+            <if test="reason != null and reason != ''">
+                reason,
+            </if>
+            <if test="buyerno != null and buyerno != ''">
+                buyerno,
+            </if>
+            <if test="policId != null">
+                polic_id,
+            </if>
+            <if test="invoiceNo != null and invoiceNo != ''">
+                invoice_no,
+            </if>
+            <if test="body != null and body != ''">
+                body,
+            </if>
+            <if test="invoicesum != null">
+                invoicesum,
+            </if>
+            <if test="quotaDays != null">
+                quota_days,
+            </if>
+            <if test="invoicedate != null">
+                invoicedate,
+            </if>
+            <if test="insuresum != null">
+                insuresum,
+            </if>
+            <if test="code10 != null and code10 != ''">
+                code10,
+            </if>
+            <if test="goodsname != null and goodsname != ''">
+                goodsname,
+            </if>
+            <if test="premiumrate != null">
+                premiumrate,
+            </if>
+            <if test="premium != null">
+                premium,
+            </if>
+            <if test="dollarrate != null">
+                dollarrate,
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                created_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                updated_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="paymode != null and paymode != ''">
+                paymode,
+            </if>
+            <if test="transportdate != null">
+                transportdate,
+            </if>
+            <if test="qztype != null and qztype != ''">
+                qztype,
+            </if>
+            <if test="btime != null">
+                btime,
+            </if>
+            <if test="etime != null">
+                etime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null and compCode != ''">
+                #{compCode,jdbcType=VARCHAR},
+            </if>
+            <if test="policyno != null and policyno != ''">
+                #{policyno,jdbcType=VARCHAR},
+            </if>
+            <if test="custCode != null and custCode != ''">
+                #{custCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custName != null and custName != ''">
+                #{custName,jdbcType=VARCHAR},
+            </if>
+            <if test="reason != null and reason != ''">
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerno != null and buyerno != ''">
+                #{buyerno,jdbcType=VARCHAR},
+            </if>
+            <if test="policId != null">
+                #{policId,jdbcType=BIGINT},
+            </if>
+            <if test="invoiceNo != null and invoiceNo != ''">
+                #{invoiceNo,jdbcType=VARCHAR},
+            </if>
+            <if test="body != null and body != ''">
+                #{body,jdbcType=VARCHAR},
+            </if>
+            <if test="invoicesum != null">
+                #{invoicesum,jdbcType=DECIMAL},
+            </if>
+            <if test="quotaDays != null">
+                #{quotaDays,jdbcType=INTEGER},
+            </if>
+            <if test="invoicedate != null">
+                #{invoicedate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="insuresum != null">
+                #{insuresum,jdbcType=DECIMAL},
+            </if>
+            <if test="code10 != null and code10 != ''">
+                #{code10,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsname != null and goodsname != ''">
+                #{goodsname,jdbcType=VARCHAR},
+            </if>
+            <if test="premiumrate != null">
+                #{premiumrate,jdbcType=DECIMAL},
+            </if>
+            <if test="premium != null">
+                #{premium,jdbcType=DECIMAL},
+            </if>
+            <if test="dollarrate != null">
+                #{dollarrate,jdbcType=DECIMAL},
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="paymode != null and paymode != ''">
+                #{paymode,jdbcType=VARCHAR},
+            </if>
+            <if test="transportdate != null">
+                #{transportdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="qztype != null and qztype != ''">
+                #{qztype,jdbcType=VARCHAR},
+            </if>
+            <if test="btime != null">
+                #{btime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="etime != null">
+                #{etime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from tb_sf_insure
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+</mapper>

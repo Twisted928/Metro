@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.model.mapper.ModelInfoMapper">
+
+	<select id="get" resultType="com.metro.ccms.web.model.domain.ModelInfoDO">
+		select `id`,`name`,`description`,`financial`,`publish`,`expiry_date`,`remark`,`deleted`,`created_by`,`create_time`,
+		`updated_by`,`update_time`,`scope`,`indus_type`,`if_old` from model_info where id = #{id}
+	</select>
+
+	<select id="list" parameterType="com.metro.ccms.web.model.query.ModelQuery" resultType="com.metro.ccms.web.model.domain.ModelInfoDO">
+		select `id`,`name`,`description`,`financial`,`publish`,`expiry_date`,`remark`,`deleted`,`created_by`,`create_time`,
+		`updated_by`,`update_time`,`scope`,`indus_type`,`if_old` from model_info
+        where deleted=0
+        <if test="scope !=null and scope!='' ">
+			and scope=#{scope}
+		</if>
+		<if test="publish !=null and publish!='' ">
+			and publish=#{publish}
+		</if>
+		order by id desc
+	</select>
+
+
+	<insert id="save" parameterType="com.metro.ccms.web.model.domain.ModelInfoDO" keyProperty="id">
+		insert into model_info
+		(
+			`name`,
+			`description`,
+			`financial`,
+			`expiry_date`,
+			`remark`,
+			`created_by`,
+			`create_time`,
+			`updated_by`,
+			`update_time`,
+			`scope`,
+			`indus_type`,
+			`if_old`
+		)
+		values
+		(
+			#{name},
+			#{description},
+			#{financial},
+			#{expiryDate},
+			#{remark},
+			#{createdBy},
+			#{createTime},
+			#{updatedBy},
+			#{updateTime},
+			#{scope},
+			#{indusType},
+			#{ifOld}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.metro.ccms.web.model.domain.ModelInfoDO">
+		update model_info 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="description != null">`description` = #{description}, </if>
+			<if test="financial != null">`financial` = #{financial}, </if>
+			<if test="publish != null">`publish` = #{publish}, </if>
+			<if test="expiryDate != null">`expiry_date` = #{expiryDate}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="createdBy != null">`created_by` = #{createdBy}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="updatedBy != null">`updated_by` = #{updatedBy}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="scope != null">`scope` = #{scope}, </if>
+			<if test="indusType != null">`indus_type` = #{indusType}, </if>
+			<if test="ifOld != null">`if_old` = #{ifOld}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from model_info where id = #{id}
+	</delete>
+
+</mapper>

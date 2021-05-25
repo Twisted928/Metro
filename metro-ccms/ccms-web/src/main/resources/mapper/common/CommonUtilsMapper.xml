@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.utils.mapper.CommonUtilsMapper">
+
+
+	<sql id="selectTbCustMembersVo">
+        select id, created_by, create_time, updated_by, update_time, status, deleted, email, depart_code, store_code, cust_code, cust_name,
+         card_code, card_name, address, city_street_room, country_code, country_name, creditno, cust_group,
+         cust_manager_code, cust_manager_name, dealer_potential, fax, ifmain, sales_district, group_id,
+         cust_block, cust_block_desc, credit_block, credit_block_desc from tb_cust_members
+    </sql>
+
+	<select id="getBasicDataByCType" resultType="com.metro.ccms.web.utils.domain.BasicDataDO">
+		select id,parent_id,parent_type,description,ctype,valid_from,valid_to from tb_basic_data where parent_type=#{ctype} and status=1 and deleted=0
+	</select>
+
+	<select id="getCustPrimaryList" parameterType="com.metro.ccms.web.utils.query.CustPrimaryQuery" resultType="com.metro.ccms.web.credit.domain.CustPrimaryDO">
+		select cust_code,cust_name,business_type,cust_type,industry_type,organ_type,ifblack,creditno_ccms from tb_cust_primary
+		<where>
+			and status=1 and deleted=0
+			<if test="custCode != null and custCode != ''">and cust_code=#{custCode}</if>
+			<if test="custName != null and custName != ''">and cust_name like '%${custName}%'</if>
+			<if test="creditnoCcms != null and creditnoCcms != ''">and creditno_ccms=#{creditnoCcms}</if>
+			<if test="ifblack != null">and ifblack=#{ifblack}</if>
+		</where>
+	</select>
+
+	<select id="getCustMembersList" parameterType="com.metro.ccms.web.utils.query.CustMembersQuery" resultType="com.metro.ccms.web.credit.domain.CustMembersDO">
+		<include refid="selectTbCustMembersVo"/>
+		<where>
+			and status=1 and deleted=0
+			<if test="storeCode != null  and storeCode != ''"> and store_code = #{storeCode}</if>
+			<if test="custCode != null  and custCode != ''"> and cust_code = #{custCode}</if>
+			<if test="custName != null  and custName != ''"> and cust_name like concat('%', #{custName}, '%')</if>
+			<if test="cardCode != null  and cardCode != ''"> and card_code = #{cardCode}</if>
+			<if test="cardName != null  and cardName != ''"> and card_name like concat('%', #{cardName}, '%')</if>
+			</where>
+	</select>
+
+	<select id="getPayTermBySettleType" resultType="com.metro.ccms.web.credit.domain.PayTermDO">
+		SELECT id,settle_type,CONCAT(payment_desc,'(',payment_code,')') as payment_desc,payment_days FROM tb_credit_payterm where settle_type=#{settleType} and status=1 and deleted=0
+	</select>
+
+	<select id="getInsuranceCompanyList" parameterType="com.metro.ccms.web.debtprotection.query.InsureCompanyQuery" resultType="com.metro.ccms.web.debtprotection.domian.InsureCompanyDO">
+		select id, comp_code, comp_name, valid_from, valid_to, created_by, create_time, updated_by,
+        update_time, `status`, deleted from tb_sf_insure_company
+        <where>
+			and deleted = 0
+			<if test="compCode !=null and compCode !=''">
+				and comp_code=#{compCode}
+			</if>
+			<if test="compName !=null and compName !=''">
+				and comp_name like '%${compName}%'
+			</if>
+		</where>
+		order by create_time desc
+	</select>
+
+	<insert id="insertApprovalRecord" parameterType="com.metro.ccms.web.utils.domain.ApprovalRecordDO" keyProperty="id">
+		insert into act_approval_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="applicationNo != null">application_no,</if>
+			<if test="approvalRoleId != null">approval_role_id,</if>
+			<if test="approvalRole != null">approval_role,</if>
+			<if test="approvalUserId != null">approval_user_id,</if>
+			<if test="approvalUser != null">approval_user,</if>
+			<if test="creditLimit != null">credit_limit,</if>
+			<if test="creditDays != null">credit_days,</if>
+			<if test="approvalOpinion != null">approval_opinion,</if>
+			<if test="instanceId != null">instance_id,</if>
+			<if test="taskId != null">task_id,</if>
+			<if test="type != null">type,</if>
+			<if test="remark != null">remark,</if>
+			<if test="createdBy != null">created_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updatedBy != null">updated_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="status != null">status,</if>
+			<if test="deleted != null">deleted,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="applicationNo != null">#{applicationNo},</if>
+			<if test="approvalRoleId != null">#{approvalRoleId},</if>
+			<if test="approvalRole != null">#{approvalRole},</if>
+			<if test="approvalUserId != null">#{approvalUserId},</if>
+			<if test="approvalUser != null">#{approvalUser},</if>
+			<if test="creditLimit != null">#{creditLimit},</if>
+			<if test="creditDays != null">#{creditDays},</if>
+			<if test="approvalOpinion != null">#{approvalOpinion},</if>
+			<if test="instanceId != null">#{instanceId},</if>
+			<if test="taskId != null">#{taskId},</if>
+			<if test="type != null">#{type},</if>
+			<if test="remark != null">#{remark},</if>
+			<if test="createdBy != null">#{createdBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updatedBy != null">#{updatedBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="status != null">#{status},</if>
+			<if test="deleted != null">#{deleted},</if>
+		</trim>
+	</insert>
+
+	<select id="getAppravalRecord" resultType="com.metro.ccms.web.utils.domain.ApprovalRecordDO">
+        select * from act_approval_record where instance_id=#{instanceId} order by create_time
+    </select>
+
+	<select id="getNickNameByUserName" resultType="String">
+		select nick_name from sys_user where user_name=#{userName}
+	</select>
+
+	<select id="getRoleNameByRoleId" resultType="String">
+		select role_name from sys_role where role_id=#{roleId}
+	</select>
+
+	<select id="getRoleInfoByUserId" resultType="com.metro.ccms.common.core.domain.entity.SysRole">
+		SELECT t2.role_id,t2.role_name FROM sys_user_role t1
+		INNER JOIN sys_role t2 on t1.role_id=t2.role_id and t2.status=0 and t2.del_flag=0
+		where user_id=#{userId}
+	</select>
+
+	<select id="getCustCodeByHead" resultType="String">
+		select cust_code from tb_cust_primary where cust_code like '%${custCode}%' order by id desc limit 1
+	</select>
+
+	<select id="getCandidateUser" resultType="String">
+		SELECT t1.user_name FROM sys_user t1 INNER JOIN sys_user_role t2 on t1.user_id=t2.user_id
+		INNER JOIN sys_user_dept t3 on t3.user_id=t2.user_id INNER JOIN sys_dept t4 on t4.dept_id=t3.dept_id
+		where t2.role_id=#{roleId}
+		<if test="deptCodes != null and deptCodes.size() > 0">
+			and t3.dept_code in
+			<foreach collection="deptCodes" item="item"
+					 index="index" separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getAutherRole" resultType="com.metro.ccms.web.activiti.domain.AutherRoleDO">
+		select * from act_auther_role where auther_role=#{roleId}
+		and date_format(end_time,'%y%m%d') <![CDATA[>=]]> date_format(#{date},'%y%m%d')
+	</select>
+
+	<!--Test-->
+	<select id="getPrimaryTemp" resultType="com.metro.ccms.web.credit.domain.CustPrimaryDO">
+		select id,creditno_ccms from tb_cust_primary order by id
+	</select>
+
+	<update id="updateCustCode">
+		update tb_cust_primary set cust_code=#{custCode} where id=#{id}
+	</update>
+
+	<select id="getUserInfoByUserName" resultType="com.metro.ccms.common.core.domain.entity.SysUser">
+		SELECT user_id,user_name,nick_name,email,phonenumber,sex,remark FROM sys_user where user_name=#{userName}
+	</select>
+	
+</mapper>

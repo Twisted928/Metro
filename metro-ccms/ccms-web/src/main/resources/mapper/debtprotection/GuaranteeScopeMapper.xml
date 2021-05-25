@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.debtprotection.mapper.GuaranteeScopeMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.debtprotection.domian.GuaranteeScopeDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="store_code" jdbcType="VARCHAR" property="storeCode"/>
+        <result column="cust_code" jdbcType="VARCHAR" property="custCode"/>
+        <result column="cust_name" jdbcType="VARCHAR" property="custName"/>
+        <result column="card_code" jdbcType="VARCHAR" property="cardCode"/>
+        <result column="card_name" jdbcType="VARCHAR" property="cardName"/>
+        <result column="main_id" jdbcType="VARCHAR" property="mainId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , created_by, store_code, cust_code, cust_name, card_code, card_name, main_id,
+    create_time, updated_by, update_time, `status`, deleted, item1, item2, item3, item4,
+    item5, item6, item7, item8, item9
+    </sql>
+
+    <insert id="save" keyColumn="id" keyProperty="id"
+            parameterType="com.metro.ccms.web.debtprotection.domian.GuaranteeScopeDO" useGeneratedKeys="true">
+        insert into tb_sf_guarantee_scope
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null and createdBy != ''">
+                created_by,
+            </if>
+            <if test="storeCode != null and storeCode != ''">
+                store_code,
+            </if>
+            <if test="custCode != null and custCode != ''">
+                cust_code,
+            </if>
+            <if test="custName != null and custName != ''">
+                cust_name,
+            </if>
+            <if test="cardCode != null and cardCode != ''">
+                card_code,
+            </if>
+            <if test="cardName != null and cardName != ''">
+                card_name,
+            </if>
+            <if test="mainId != null and mainId != ''">
+                main_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null and createdBy != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="storeCode != null and storeCode != ''">
+                #{storeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custCode != null and custCode != ''">
+                #{custCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custName != null and custName != ''">
+                #{custName,jdbcType=VARCHAR},
+            </if>
+            <if test="cardCode != null and cardCode != ''">
+                #{cardCode,jdbcType=VARCHAR},
+            </if>
+            <if test="cardName != null and cardName != ''">
+                #{cardName,jdbcType=VARCHAR},
+            </if>
+            <if test="mainId != null and mainId != ''">
+                #{mainId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from tb_sf_guarantee_scope
+        where main_id = #{id,jdbcType=BIGINT}
+    </delete>
+    <delete id="deleteByID">
+        update tb_sf_guarantee_scope
+        set deleted = 1
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <delete id="deleteId">
+        delete
+        from tb_sf_guarantee_scope
+        where id = #{id}
+    </delete>
+    <insert id="update" keyColumn="id" keyProperty="id"
+            parameterType="com.metro.ccms.web.debtprotection.domian.GuaranteeScopeDO" useGeneratedKeys="true">
+        insert into tb_sf_guarantee_scope
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null and createdBy != ''">
+                created_by,
+            </if>
+            <if test="storeCode != null and storeCode != ''">
+                store_code,
+            </if>
+            <if test="custCode != null and custCode != ''">
+                cust_code,
+            </if>
+            <if test="custName != null and custName != ''">
+                cust_name,
+            </if>
+            <if test="cardCode != null and cardCode != ''">
+                card_code,
+            </if>
+            <if test="cardName != null and cardName != ''">
+                card_name,
+            </if>
+            <if test="mainId != null and mainId != ''">
+                main_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                updated_by,
+            </if>
+            update_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null and createdBy != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="storeCode != null and storeCode != ''">
+                #{storeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custCode != null and custCode != ''">
+                #{custCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custName != null and custName != ''">
+                #{custName,jdbcType=VARCHAR},
+            </if>
+            <if test="cardCode != null and cardCode != ''">
+                #{cardCode,jdbcType=VARCHAR},
+            </if>
+            <if test="cardName != null and cardName != ''">
+                #{cardName,jdbcType=VARCHAR},
+            </if>
+            <if test="mainId != null and mainId != ''">
+                #{mainId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            CURRENT_TIMESTAMP
+        </trim>
+    </insert>
+    <update id="delete">
+        update tb_sf_guarantee_scope
+        set deleted = 1
+        where main_id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByID">
+        update tb_sf_guarantee_scope
+        set main_id    = #{mainId,jdbcType=VARCHAR},
+            updated_by = #{updatedBy,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByMianID" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_guarantee_scope
+        where main_id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="getCard" resultType="java.lang.Integer">
+        select count(0)
+        from tb_sf_guarantee_scope
+        where main_id = #{mainId,jdbcType=VARCHAR}
+          and card_code = #{cardCode,jdbcType=VARCHAR}
+          and store_code = #{storeCode,jdbcType=VARCHAR}
+    </select>
+</mapper>

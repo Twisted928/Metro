@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.debtprotection.mapper.InsurecusMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.debtprotection.domian.InsurecusDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="comp_code" jdbcType="VARCHAR" property="compCode"/>
+        <result column="comp_name" jdbcType="VARCHAR" property="compName"/>
+        <result column="buyerno" jdbcType="VARCHAR" property="buyerno"/>
+        <result column="cust_code" jdbcType="VARCHAR" property="custCode"/>
+        <result column="cust_name" jdbcType="VARCHAR" property="custName"/>
+        <result column="policyno" jdbcType="VARCHAR" property="policyno"/>
+        <result column="credit_level" jdbcType="VARCHAR" property="creditLevel"/>
+        <result column="quota" jdbcType="DECIMAL" property="quota"/>
+        <result column="quota_days" jdbcType="DECIMAL" property="quotaDays"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+        <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="contract_no" jdbcType="VARCHAR" property="contractNo"/>
+        <result column="lcno" jdbcType="VARCHAR" property="lcno"/>
+        <result column="body" jdbcType="VARCHAR" property="body"/>
+        <result column="polic_id" jdbcType="BIGINT" property="policId"/>
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo"/>
+        <result column="invoicesum" jdbcType="DECIMAL" property="invoicesum"/>
+        <result column="invoicedate" jdbcType="TIMESTAMP" property="invoicedate"/>
+        <result column="qztype" jdbcType="VARCHAR" property="qztype"/>
+        <result column="clientno" jdbcType="VARCHAR" property="clientno"/>
+        <result column="btime" jdbcType="TIMESTAMP" property="btime"/>
+        <result column="etime" jdbcType="TIMESTAMP" property="etime"/>
+        <result column="insuresum" jdbcType="DECIMAL" property="insuresum"/>
+        <result column="paymode" jdbcType="VARCHAR" property="paymode"/>
+        <result column="transportdate" jdbcType="TIMESTAMP" property="transportdate"/>
+        <result column="code10" jdbcType="VARCHAR" property="code10"/>
+        <result column="goodsname" jdbcType="VARCHAR" property="goodsname"/>
+        <result column="employeename" jdbcType="VARCHAR" property="employeename"/>
+        <result column="ifoversea" jdbcType="TINYINT" property="ifoversea"/>
+        <result column="premiumrate" jdbcType="DECIMAL" property="premiumrate"/>
+        <result column="premium" jdbcType="DECIMAL" property="premium"/>
+        <result column="dollarrate" jdbcType="DECIMAL" property="dollarrate"/>
+        <result column="country_code" jdbcType="VARCHAR" property="countryCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , comp_code, comp_name, buyerno, cust_code, cust_name, policyno, credit_level,
+    quota, quota_days, created_by, create_time, updated_by, update_time, `status`, item1, 
+    item2, item3, item4, item5, item6, item7, item8, item9, deleted, `timestamp`, reason, 
+    contract_no, lcno, body, polic_id, invoice_no, invoicesum, invoicedate, qztype, clientno, 
+    btime, etime, insuresum, paymode, transportdate, code10, goodsname, employeename, 
+    ifoversea, premiumrate, premium, dollarrate, country_code
+    </sql>
+    <update id="delete">
+        update tb_sf_insurecus
+        set deleted = 1
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_insurecus where deleted = '0'
+        <trim suffixOverrides="and | or">
+            <if test="custCode != null and custCode !=''">
+                and cust_code = #{custCode,jdbcType=VARCHAR}
+            </if>
+            <if test="custName != null and custName !=''">
+                and cust_name like concat('%',#{custName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="status != null">
+                and `status` = #{status,jdbcType=TINYINT}
+            </if>
+        </trim>
+        order by create_time desc
+    </select>
+    <select id="getJudgment" resultType="java.lang.Integer">
+        select count(0)
+        from tb_sf_insurecus
+        where deleted = '0'
+        and `status` = '1'
+        and comp_code = #{compCode,jdbcType=VARCHAR}
+        and cust_code = #{custCode,jdbcType=VARCHAR}
+        and policyno = #{policyno,jdbcType=VARCHAR}
+        <if test="id != null">
+            and id != #{id,jdbcType=BIGINT}
+        </if>
+    </select>
+    <select id="getByID" resultType="com.metro.ccms.web.debtprotection.vo.InsureChecklistVO">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_insurecus where deleted = '0' and id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="getByCompanyCode" resultType="java.lang.Integer">
+        select count(0)
+        from tb_sf_insurecus
+        where deleted = '0'
+          and comp_code = #{compCode,jdbcType=VARCHAR}
+    </select>
+    <select id="getByPolicyno" resultType="java.lang.Integer">
+        select count(0) from tb_sf_insurecus
+        where deleted = '0'
+          and `status` = 1
+          and policyno = #{policyno,jdbcType=VARCHAR}
+    </select>
+    <insert id="save" keyColumn="id" keyProperty="id"
+            parameterType="com.metro.ccms.web.debtprotection.vo.InsureChecklistVO" useGeneratedKeys="true">
+        insert into tb_sf_insurecus
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null and compCode != ''">
+                comp_code,
+            </if>
+            <if test="compName != null and compName != ''">
+                comp_name,
+            </if>
+            <if test="buyerno != null and buyerno != ''">
+                buyerno,
+            </if>
+            <if test="custCode != null and custCode != ''">
+                cust_code,
+            </if>
+            <if test="custName != null and custName != ''">
+                cust_name,
+            </if>
+            <if test="policyno != null and policyno != ''">
+                policyno,
+            </if>
+            <if test="creditLevel != null and creditLevel != ''">
+                credit_level,
+            </if>
+            <if test="quota != null and quota != ''">
+                quota,
+            </if>
+            <if test="quotaDays != null">
+                quota_days,
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                created_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                updated_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null and compCode != ''">
+                #{compCode,jdbcType=VARCHAR},
+            </if>
+            <if test="compName != null and compName != ''">
+                #{compName,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerno != null and buyerno != ''">
+                #{buyerno,jdbcType=VARCHAR},
+            </if>
+            <if test="custCode != null and custCode != ''">
+                #{custCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custName != null and custName != ''">
+                #{custName,jdbcType=VARCHAR},
+            </if>
+            <if test="policyno != null and policyno != ''">
+                #{policyno,jdbcType=VARCHAR},
+            </if>
+            <if test="creditLevel != null and creditLevel != ''">
+                #{creditLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="quota != null and quota != ''">
+                #{quota,jdbcType=DECIMAL},
+            </if>
+            <if test="quotaDays != null">
+                #{quotaDays,jdbcType=INTEGER},
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.metro.ccms.web.debtprotection.vo.InsureChecklistVO">
+        update tb_sf_insurecus
+        <set>
+            <if test="buyerno != null and buyerno != ''">
+                buyerno = #{buyerno,jdbcType=VARCHAR},
+            </if>
+            <if test="policyno != null and policyno != ''">
+                policyno = #{policyno,jdbcType=VARCHAR},
+            </if>
+            <if test="creditLevel != ''">
+                credit_level = #{creditLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="quota != ''">
+                quota = #{quota,jdbcType=DECIMAL},
+            </if>
+            <if test="quotaDays != ''">
+                quota_days = #{quotaDays,jdbcType=DECIMAL},
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                created_by = #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                updated_by = #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=TINYINT}
+            </if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByType" parameterType="com.metro.ccms.web.debtprotection.vo.InsureChecklistVO">
+        update tb_sf_insurecus
+        set `status` = 0
+        where comp_code = #{compCode,jdbcType=VARCHAR}
+          and cust_code = #{custCode,jdbcType=VARCHAR}
+          and policyno = #{policyno,jdbcType=VARCHAR}
+    </update>
+</mapper>

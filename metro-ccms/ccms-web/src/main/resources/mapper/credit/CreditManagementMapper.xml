@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.credit.mapper.CreditManagementMapper">
+  <resultMap id="BaseResultMap" type="com.metro.ccms.web.credit.vo.CreditManagementVO">
+    <id property="id" column="id"  />
+    <result column="application_no" property="applicationno" />
+    <result column="industry_type" property="industrytype" />
+    <result column="mod_code" property="modcode" />
+    <result column="mod_name" property="modname" />
+    <result column="appraisal_date" property="appraisaldate" />
+    <result column="grade" property="grade" />
+    <result column="rank" property="rank" />
+    <result column="advice_limit" property="advicelimit" />
+    <result column="advice_days" property="advicedays" />
+    <result column="limit" property="limit" />
+    <result column="ifblack" property="ifblack" />
+    <result column="ifwhite" property="ifwhite" />
+    <result column="group_name" property="groupname" />
+    <result column="cust_code" property="custcode" />
+    <result column="cust_name" property="custname" />
+    <result column="valid_from" property="validfrom" />
+    <result column="valid_to" property="validto" />
+    <result column="status" property="status" />
+    <result column="deleted" property="deleted" />
+    <result column="created_by" property="createdby" />
+    <result column="create_time" property="createtime" />
+    <result column="updated_by" property="updatedby" />
+    <result column="update_time" property="updatetime" />
+  </resultMap>
+  <resultMap id="CardResultMap" type="com.metro.ccms.web.credit.vo.CarditManagementVO">
+    <id property="id" column="id"  />
+    <result column="application_no" property="applicationno" />
+    <result column="cust_code" property="custcode" />
+    <result column="depart_code" property="departcode" />
+    <result column="dept_name" property="departname" />
+    <result column="store_code" property="storecode" />
+    <result column="cust_name" property="custname" />
+    <result column="card_code" property="cardcode" />
+    <result column="card_name" property="cardname" />
+    <result column="apply_payterm" property="applypayterm" />
+    <result column="apply_limit" property="applylimit" />
+    <result column="limit_type" property="limittype" />
+    <result column="grade" property="grade" />
+    <result column="rank" property="rank" />
+    <result column="payment_term" property="paymentterm" />
+    <result column="limit" property="limit" />
+    <result column="source" property="source" />
+    <result column="applicant" property="applicant" />
+    <result column="apply_time" property="applytime" />
+    <result column="valid_from" property="validfrom" />
+    <result column="valid_to" property="validto" />
+    <result column="custgr_name" property="custgrname" />
+    <result column="group_name" property="groupname" />
+    <result column="group_payterm" property="grouppayterm" />
+    <result column="group_limit" property="grouplimit" />
+    <result column="mod_name" property="modname" />
+    <result column="appraisal_date" property="appraisaldate" />
+    <result column="advice_limit" property="advicelimit" />
+    <result column="advice_days" property="advicedays" />
+    <result column="created_by" property="createdby" />
+    <result column="create_time" property="createtime" />
+    <result column="updated_by" property="updatedby" />
+    <result column="update_time" property="updatetime" />
+    <result column="status" property="status" />
+    <result column="deleted" property="deleted" />
+    <result column="if_creditgr" property="ifcreditgr" />
+    <result column="approved_by" property="approvedby" />
+    <result column="approve_time" property="approvetime" />
+    <result column="approval_payterm" property="approvalpayterm" />
+    <result column="approval_limit" property="approvallimit" />
+    <result column="approval_code" property="approvalcode" />
+    <result column="release_date" property="releasedate" />
+  </resultMap>
+
+  <select id="pagesel" parameterType="com.metro.ccms.web.credit.query.CreditManagementQuery" resultMap="BaseResultMap">
+    SELECT
+    a.id,a.created_by,a.application_no,
+    a.create_time,a.updated_by,a.update_time,a.status,a.deleted,a.currency,a.valid_from,a.valid_to,
+    a.cust_code,a.cust_name,a.group_code,a.mod_code,a.appraisal_date,a.grade,
+    a.rank,a.advice_limit,a.advice_days,a.mod_name,
+    a.if_creditgr,b.INDUSTRY_TYPE as INDUSTRY_TYPE,CASE IFNULL(c.cust_code,'') WHEN '' THEN '0' ELSE '1' END as ifblack,
+    CASE IFNULL(d.cust_code,'') WHEN '' THEN '0' ELSE '1' END as IFWHITE,
+    e.group_name as group_name
+    from tb_credit_customer a
+    INNER JOIN	(select MAX(id) as id from tb_credit_customer  group by cust_code,mod_code) f on a.id=f.id
+    LEFT JOIN tb_cust_primary b on a.cust_code=b.cust_code and b.status='1'
+    LEFT JOIN tb_cust_black c on a.cust_code=c.cust_code and c.status='1'
+    LEFT JOIN tb_cust_white d on a.cust_code=d.cust_code and d.status='1'
+    LEFT JOIN tb_credit_group e  on a.cust_code=e.cust_code and e.status='1'
+    where 1=1
+      <if test="custcode != null and custcode != ''">and a.cust_code = #{custcode}</if>
+      <if test="custname != null and custname != ''">and a.cust_name like CONCAT('%',#{custname},'%') </if>
+      <if test="modname != null and modname != ''">and a.mod_name = #{modname}</if>
+      <if test="applicationno != null and applicationno != ''">and a.application_no = #{applicationno}</if>
+      <if test="rank != null and rank != ''">and a.rank = #{rank}</if>
+      <if test="industrytype != null and industrytype != ''">and b.industry_type = #{industrytype}</if>
+      <if test="status != null and status != ''"> and a.status=#{status}</if>
+      <if test="appraisaldatestr != null and appraisaldatestr != ''">
+          <![CDATA[ and DATE_FORMAT(a.appraisal_date,'%Y-%m-%d') >= DATE_FORMAT(#{appraisaldatestr},'%Y-%m-%d')]]>
+      </if>
+      <if test="appraisaldateend != null and appraisaldateend != ''">
+          <![CDATA[ and DATE_FORMAT(a.appraisal_date,'%Y-%m-%d') <= DATE_FORMAT(#{appraisaldateend},'%Y-%m-%d')]]>
+      </if>
+  </select>
+  <select id="history" parameterType="com.metro.ccms.web.credit.query.CreditManagementQuery" resultMap="BaseResultMap">
+    SELECT a.id,a.created_by,a.application_no,
+    a.create_time,a.updated_by,a.update_time,a.status,a.deleted,a.currency,a.valid_from,a.valid_to,
+    a.cust_code,a.cust_name,a.group_code,a.mod_code,a.appraisal_date,a.grade,
+    a.rank,a.advice_limit,a.advice_days,a.mod_name,
+    a.if_creditgr,b.INDUSTRY_TYPE as INDUSTRY_TYPE,CASE IFNULL(c.cust_code,'') WHEN '' THEN '0' ELSE '1' END as ifblack,
+    CASE IFNULL(d.cust_code,'') WHEN '' THEN '0' ELSE '1' END as IFWHITE,
+    e.group_name as group_name
+    from tb_credit_customer a LEFT JOIN tb_cust_primary b on a.cust_code=b.cust_code and b.status='1'
+    LEFT JOIN tb_cust_black c on a.cust_code=c.cust_code and c.status='1'
+    LEFT JOIN tb_cust_white d on a.cust_code=d.cust_code and d.status='1'
+    LEFT JOIN tb_credit_group e  on a.cust_code=e.cust_code and e.status='1'
+    where 1=1
+    <if test="custcode != null and custcode != ''">and a.cust_code = #{custcode}</if>
+    order by a.create_time desc
+  </select>
+  <select id="pagedetails" parameterType="com.metro.ccms.web.credit.query.CreditManagementQuery" resultMap="BaseResultMap">
+    SELECT a.id,a.created_by,a.application_no,
+    a.create_time,a.updated_by,a.update_time,a.status,a.deleted,a.currency,a.valid_from,a.valid_to,
+    a.cust_code,a.cust_name,a.group_code,a.mod_code,a.appraisal_date,a.grade,
+    a.rank,a.advice_limit,a.advice_days,a.mod_name,
+    a.if_creditgr,b.INDUSTRY_TYPE as INDUSTRY_TYPE,CASE IFNULL(c.cust_code,'') WHEN '' THEN '0' ELSE '1' END as ifblack,
+    CASE IFNULL(d.cust_code,'') WHEN '' THEN '0' ELSE '1' END as IFWHITE,
+    e.group_name as group_name
+    from tb_credit_customer a LEFT JOIN tb_cust_primary b on a.cust_code=b.cust_code and b.status='1'
+    LEFT JOIN tb_cust_black c on a.cust_code=c.cust_code and c.status='1'
+    LEFT JOIN tb_cust_white d on a.cust_code=d.cust_code and d.status='1'
+    LEFT JOIN tb_credit_group e  on a.cust_code=e.cust_code and e.status='1'
+    where 1=1
+    <if test="id != null and id != ''">and a.id = #{id}</if>
+  </select>
+  <select id="pagecard" parameterType="com.metro.ccms.web.credit.query.CarditManagementQuery" resultMap="CardResultMap">
+    select a.id,a.created_by,a.create_time,a.updated_by,a.update_time,
+    a.status,a.deleted,a.application_no,a.applicant,a.apply_time,a.currency,
+    a.valid_from,a.valid_to,a.depart_code,a.store_code,a.cust_code,
+    a.cust_name,a.card_code,a.card_name,a.group_code,a.mod_code,
+    a.appraisal_date,a.grade,a.rank,a.apply_payterm,a.apply_limit,
+    a.limit_type,a.group_payterm,a.group_limit,a.advice_limit,
+    a.advice_days,a.credit_block,a.limit,a.payment_term,a.if_creditgr,
+    a.approved_by,a.approve_time,a.approval_payterm,a.approval_limit,
+    a.approval_code,a.mod_name,
+    b.dept_name as dept_name from tb_credit_member a LEFT JOIN
+    sys_dept b on a.depart_code=b.dept_code and b.del_flag='0'
+    where 1=1
+      <if test="departcode != null and departcode != ''">and a.depart_code = #{departcode}</if>
+      <if test="custcode != null and custcode != ''">and a.cust_code = #{custcode}</if>
+      <if test="custname != null and custname != ''">and a.cust_name like CONCAT('%',#{custname},'%') </if>
+      <if test="cardcode != null and cardcode != ''">and a.card_code = #{cardcode}</if>
+      <if test="cardname != null and cardname != ''">and a.card_name like CONCAT('%',#{cardname},'%') </if>
+      <if test="limittype != null and limittype != ''">and a.limit_type = #{limittype}</if>
+      <if test="status != null and status != ''">and a.status = #{status}</if>
+      <if test="validfromstr != null and validfromstr != ''">
+        <![CDATA[ and DATE_FORMAT(a.valid_from,'%Y-%m-%d') >= DATE_FORMAT(#{validfromstr},'%Y-%m-%d')]]>
+      </if>
+      <if test="validfromend != null and validfromend != ''">
+        <![CDATA[ and DATE_FORMAT(a.valid_from,'%Y-%m-%d') <= DATE_FORMAT(#{validfromend},'%Y-%m-%d')]]>
+      </if>
+      <if test="validtostr != null and validtostr != ''">
+        <![CDATA[ and DATE_FORMAT(a.valid_to,'%Y-%m-%d') >= DATE_FORMAT(#{validtostr},'%Y-%m-%d')]]>
+      </if>
+      <if test="validtoend != null and validtoend != ''">
+        <![CDATA[ and DATE_FORMAT(a.valid_to,'%Y-%m-%d') <= DATE_FORMAT(#{validtoend},'%Y-%m-%d')]]>
+      </if>
+      <if test="releasedatestr != null and releasedatestr != ''">
+        <![CDATA[ and DATE_FORMAT(a.release_date,'%Y-%m-%d') >= DATE_FORMAT(#{releasedatestr},'%Y-%m-%d')]]>
+      </if>
+      <if test="releasedateend != null and releasedateend != ''">
+        <![CDATA[ and DATE_FORMAT(a.release_date,'%Y-%m-%d') <= DATE_FORMAT(#{releasedateend},'%Y-%m-%d')]]>
+      </if>
+      <if test="custgrname != null and custgrname != ''">and a.custgr_name like CONCAT('%',#{custgrname},'%') </if>
+      <if test="groupname != null and groupname != ''">and a.group_name like CONCAT('%',#{groupname},'%') </if>
+      <if test="source != null and source != ''">and a.source = #{source}</if>
+      order by a.create_time desc
+  </select>
+
+</mapper>

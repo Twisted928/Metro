@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.model.mapper.ModelResultSubMapper">
+
+	<sql id="base_sql">
+		`main_id`,`index_id`,`index_name`,`type`,`description`,`standard`,`weight`,`method`,`native_Value` as `nativeValue`,`value`,`score`,`exception`,`remark`,`expression`
+	</sql>
+	<select id="get" resultType="com.metro.ccms.web.model.domain.ModelResultSubDO">
+		select <include refid="base_sql"></include> from model_result_sub where main_id = #{mainId}
+	</select>
+
+	<insert id="batchSave" parameterType="java.util.List">
+		insert into model_result_sub
+		(
+			`main_id`, 
+			`index_id`, 
+			`index_name`, 
+			`type`, 
+			`description`, 
+			`standard`, 
+			`weight`, 
+			`value`, 
+			`score`, 
+			`exception`, 
+			`remark`,
+			`method`,
+			`native_value`,
+			`expression`
+		)
+		values
+		<foreach collection="list" item="item" separator=",">
+		(
+			#{item.mainId},
+			#{item.indexId},
+			#{item.indexName},
+			#{item.type},
+			#{item.description},
+			#{item.standard},
+			#{item.weight},
+			#{item.value},
+			#{item.score},
+			#{item.exception},
+			#{item.remark},
+			#{item.method},
+			#{item.nativeValue},
+			#{item.expression}
+		)
+		</foreach>
+	</insert>
+
+</mapper>

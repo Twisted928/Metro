@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.model.mapper.RuleModelInfoIndexMapper">
+
+    <select id="get" resultType="com.metro.ccms.web.model.domain.RuleModelIndexInfoDO">
+		select `id`,`model_id`,`index_id`,`method`,`created_by`,`create_time`,`updated_by`,`update_time`,`status`,`deleted`  from rulemodel_info_index  where id = #{id}
+	</select>
+
+    <select id="list" resultType="com.metro.ccms.web.model.domain.RuleModelIndexInfoDO">
+        select
+        t.id,t.model_id as modelid,t.index_id as indexid,t1.type as type, t1.name as indexname,t1.description,t1.remark,t.method,t.created_by as createdBy,t.create_time as createTime,t.updated_by as updatedBy,t.update_time as updateTime
+        from rulemodel_info_index t
+        inner join rulemodel_index t1 on t.index_id=t1.id
+        <where>
+            and t.model_id = #{modId}
+        </where>
+        order by t1.type,t.index_id
+
+    </select>
+    <select id="listkehu" parameterType="com.metro.ccms.web.utils.domain.BasicDataDO"
+            resultType="com.metro.ccms.web.utils.domain.BasicDataDO">
+        SELECT DISTINCT ctype FROM tb_basic_data where parent_type='CustType' and deleted='0' and status='1'
+    </select>
+    <insert id="save" parameterType="com.metro.ccms.web.model.domain.RuleModelIndexInfoDO" keyProperty="id">
+		insert into rulemodel_info_index
+		(
+			`model_id`, 
+			`index_id`,
+			`method`,
+			`created_by`, 
+			`create_time`
+		)
+		values
+		(
+			#{modelId}, 
+			#{indexId},
+			#{method},
+			#{createdBy}, 
+			now()
+		)
+	</insert>
+
+    <update id="update" parameterType="com.metro.ccms.web.model.domain.RuleModelIndexInfoDO">
+        update rulemodel_info_index
+        <set>
+            `update_time` = now(),
+            <if test="modelId != null">`model_id` = #{modelId},</if>
+            <if test="indexId != null">`index_id` = #{indexId},</if>
+            <if test="method != null">`method` = #{method},</if>
+            <if test="updatedBy != null">`updated_by` = #{updatedBy},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+		delete from rulemodel_info_index where id = #{id}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from rulemodel_info_index where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

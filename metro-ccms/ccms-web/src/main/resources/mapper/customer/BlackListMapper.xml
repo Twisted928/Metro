@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.customer.mapper.BlackListMapper">
+  <resultMap id="BaseResultMap" type="com.metro.ccms.web.customer.vo.BlackListVO">
+    <id property="id" column="id"  />
+    <result column="cust_code" property="custcode" />
+    <result column="cust_name" property="custname" />
+    <result column="valid_from" property="validfrom" />
+    <result column="valid_to" property="validto" />
+    <result column="reason" property="reason" />
+    <result column="status" property="status" />
+    <result column="deleted" property="deleted" />
+    <result column="item1" property="item1" />
+    <result column="item2" property="item2" />
+    <result column="item3" property="item3" />
+    <result column="item4" property="item4" />
+    <result column="item5" property="item5" />
+    <result column="item6" property="item6" />
+    <result column="item7" property="item7" />
+    <result column="item8" property="item8" />
+    <result column="item9" property="item9" />
+    <result column="created_by" property="createdby" />
+    <result column="create_time" property="createtime" />
+    <result column="updated_by" property="updatedby" />
+    <result column="update_time" property="updatetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+            id,
+        created_by,
+        create_time,
+        updated_by,
+        update_time,
+        status,
+        deleted,
+        item1,
+        item2,
+        item3,
+        item4,
+        item5,
+        item6,
+        item7,
+        item8,
+        item9,
+        valid_from,
+        valid_to,
+        cust_code,
+        cust_name,
+        reason
+  </sql>
+  <select id="pagesel" parameterType="com.metro.ccms.web.customer.query.BlackListQuery" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_cust_black
+    where 1=1
+      <if test="custcode != null and custcode != ''">and cust_code = #{custcode}</if>
+      <if test="custname != null and custname != ''">and cust_name like CONCAT('%',#{custname},'%') </if>
+      <if test="status != null and status != ''">and status = #{status}</if>
+      <if test="validfromstr != null and validfromstr != ''">
+          <![CDATA[ and DATE_FORMAT(valid_from,'%Y-%m-%d') >= DATE_FORMAT(#{validfromstr},'%Y-%m-%d')]]>
+      </if>
+      <if test="validfromend != null and validfromend != ''">
+          <![CDATA[ and DATE_FORMAT(valid_from,'%Y-%m-%d') <= DATE_FORMAT(#{validfromend},'%Y-%m-%d')]]>
+       </if>
+      <if test="validtostr != null and validtostr != ''">
+          <![CDATA[ and DATE_FORMAT(valid_to,'%Y-%m-%d') >= DATE_FORMAT(#{validtostr},'%Y-%m-%d')]]>
+      </if>
+      <if test="validtoend != null and validtoend != ''">
+          <![CDATA[ and DATE_FORMAT(valid_to,'%Y-%m-%d') <= DATE_FORMAT(#{validtoend},'%Y-%m-%d')]]>
+       </if>
+      <if test="deleted != null and deleted != ''">and deleted = #{deleted}</if>
+      order by create_time desc
+  </select>
+  <select id="pagesells" parameterType="com.metro.ccms.web.customer.query.BlackListQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_cust_black
+    where 1=1
+      <if test="custcode != null and custcode != ''">and cust_code = #{custcode}</if>
+      <if test="custname != null and custname != ''">and cust_name like CONCAT('%',#{custname},'%') </if>
+      <if test="status != null and status != ''">and status = #{status}</if>
+      <if test="deleted != null and deleted != ''">and deleted = #{deleted}</if>
+      <if test="id != null and id != ''">and id = #{id}</if>
+      order by create_time desc
+  </select>
+
+</mapper>

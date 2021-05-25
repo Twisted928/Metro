@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.metro.ccms.web.credit.mapper.CustomergroupManagementServiceMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.credit.vo.CustomerGroupVO">
+        <id property="id" column="id"  />
+        <result column="status" property="status" />
+        <result column="deleted" property="deleted" />
+        <result column="depart_code" property="departCode" />
+        <result column="store_code" property="storeCode" />
+        <result column="cust_code" property="custCode" />
+        <result column="cust_name" property="custName" />
+        <result column="card_code" property="cardCode" />
+        <result column="card_name" property="cardName" />
+        <result column="custGroup" property="custGroup" />
+        <result column="cust_manager_code" property="custManagerCode" />
+        <result column="cust_manager_name" property="custManagerName" />
+        <result column="ifmain" property="ifmain" />
+        <result column="group_id" property="groupId" />
+        <result column="custgrName" property="custgrName" />
+        <result column="custgrPayterm" property="custgrPayterm" />
+        <result column="custgrLimit" property="custgrLimit" />
+        <result column="totalRevenue" property="totalRevenue" />
+        <result column="iar" property="iar" />
+        <result column="idue" property="idue" />
+        <result column="cardNum" property="cardNum" />
+        <result column="storeNum" property="storeNum" />
+    </resultMap>
+    <select id="selCustGroup" resultMap="BaseResultMap">
+        SELECT b.cust_group as custGroup,description as custgrName,SUM(b.cardNum) as cardNum,SUM(b.storeNum) as storeNum,
+        MAX(b.payment_term) as custgrPayterm,SUM(b.`limit`) as custgrLimit,SUM(b.zsr) as totalRevenue,
+        SUM(b.idue) as idue,SUM(b.iar) as iar
+        FROM(SELECT
+		cust_group,
+		a.description,
+		COUNT(card_code) cardNum,
+		COUNT(store_code) storeNum,
+		(SELECT MAX(c.payment_term) FROM tb_credit_member c WHERE b.cust_code = c.cust_code) payment_term,
+		(SELECT sum(IFNULL(c.`limit`, 0)) FROM tb_credit_member c WHERE b.cust_code = c.cust_code) `limit`,
+		(SELECT sum(IFNULL(d.amount, 0)) FROM tb_rp_sales d WHERE b.cust_code = d.cust_code) zsr,
+		(SELECT SUM(IFNULL(e.idue,0)) FROM tb_rp_ardata e WHERE b.cust_code = e.cust_code) idue,
+		(SELECT SUM(IFNULL(e.iar,0)) FROM tb_rp_ardata e WHERE b.cust_code = e.cust_code) iar
+	FROM
+		tb_cust_members b
+			INNER JOIN tb_basic_data a ON a.parent_type = b.cust_type
+			AND a.ctype = b.cust_group
+        <if test="custGroup != null and custGroup !=''">
+            where b.cust_group=#{custGroup,jdbcType=VARCHAR}
+        </if>
+        <if test="custgrName != null and custgrName !=''">
+            and a.description=#{custgrName,jdbcType=VARCHAR}
+        </if>
+	GROUP BY
+		b.cust_code,
+		a.description,
+		b.cust_group
+        )b
+    GROUP BY
+			b.cust_group,
+			b.description
+    </select>
+    <select id="selCustGroupInfo" resultMap="BaseResultMap">
+    SELECT cuss.*, SUM(IFNULL(f.iar, 0)) as cardiar, SUM(IFNULL(f.idue, 0)) as cardidue
+FROM (
+	SELECT cus.*, SUM(IFNULL(e.amount, 0)) AS totalcardRe
+	FROM (
+		SELECT b.dept_name as deptName, a.store_code, a.card_code, a.card_name,a.cust_code, d.limit_type as limitType,
+		d.payment_term as paymentTerm, d.`limit` as `limit`,d.valid_from as validFrom, d.valid_to as validTo
+		    FROM tb_cust_members a
+			left JOIN sys_dept b ON a.depart_code = b.dept_code
+			left JOIN tb_credit_member d
+			ON a.cust_code = d.cust_code AND a.card_code = d.card_code
+			where a.cust_group = #{custGroup,jdbcType=VARCHAR}
+	     ) cus
+		left JOIN tb_rp_sales e ON e.card_code = cus.card_code
+	    GROUP BY cus.card_code, cus.deptName, cus.store_code, cus.card_name, cus.cust_code, cus.limitType,
+	    cus.paymentTerm, cus.`limit`, cus.validFrom, cus.validTo
+    ) cuss
+	left JOIN tb_rp_ardata f ON f.card_code = cuss.card_code
+    GROUP BY cuss.card_code, cuss.deptName, cuss.store_code, cuss.card_name, cuss.cust_code, cuss.limitType,
+    cuss.paymentTerm, cuss.`limit`, cuss.validFrom, cuss.validTo
+    </select>
+
+</mapper>

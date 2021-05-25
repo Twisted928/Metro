@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.activiti.mapper.AuthorizationMapper">
+
+	<select id="getRoleUserInfo" resultType="com.metro.ccms.web.activiti.vo.RoleInfoVO">
+		select r.user_id,r.user_name,r.nick_name,ro.role_id,ro.role_name from sys_role ro inner join sys_user_role ur on ro.role_id=ur.role_id
+		inner join sys_user r on r.user_id=ur.user_id where ro.role_id=#{roleId}
+	</select>
+
+	<select id="getAutherByTaskId" resultType="com.metro.ccms.web.activiti.domain.AutherDocumentDO">
+		select t1.id,t1.application_no,t1.instance_id,t1.task_id,t1.receive_id,t1.receive_user,t2.application_no as main_no from act_auther_document t1
+		inner join act_auther_document_main t2 on t1.main_id=t2.id
+		where task_id=#{taskId}
+	</select>
+
+	<select id="getRoleInfoAll" resultType="com.metro.ccms.web.activiti.vo.RoleInfoVO">
+		select ro.role_id,ro.role_name from sys_role ro
+	</select>
+
+	<select id="getRoleByUser" resultType="com.metro.ccms.web.activiti.vo.RoleInfoVO">
+		select ro.role_id,ro.role_name from sys_role ro inner join sys_user_role ur on ro.role_id=ur.role_id
+		where ur.user_id=#{userId}
+	</select>
+
+	<insert id="saveAutherDocument" parameterType="com.metro.ccms.web.activiti.domain.AutherDocumentDO" keyProperty="id">
+		insert into act_auther_document
+		(
+			`id`,
+			`main_id`,
+			`auther_id`,
+			`auther_user`,
+			`auther_role_id`,
+			`auther_role_name`,
+			`receive_id`,
+			`receive_user`,
+			`receive_role_id`,
+			`receive_role_name`,
+			`application_no`,
+			`type`,
+			`auther_customer`,
+			`begin_time`,
+			`end_time`,
+			`instance_id`,
+			`task_id`
+		)
+		values
+		(
+			#{id},
+			#{mainId},
+			#{autherId},
+			#{autherUser},
+			#{autherRoleId},
+			#{autherRoleName},
+			#{receiveId},
+			#{receiveUser},
+			#{receiveRoleId},
+			#{receiveRoleName},
+			#{applicationNo},
+			#{type},
+			#{autherCustomer},
+			#{beginTime},
+			#{endTime},
+			#{instanceId},
+			#{taskId}
+		)
+	</insert>
+
+	<select id="getAutherNoMaxId" resultType="int">
+		select case when MAX(id) is null then 0 else MAX(id) end from act_auther_document_main
+	</select>
+
+	<select id="getAutherRoleMaxId" resultType="int">
+		select case when MAX(id) is null then 0 else MAX(id) end from act_auther_role_main
+	</select>
+
+	<insert id="saveAutherDocumentMain" parameterType="com.metro.ccms.web.activiti.domain.AutherDocumentMainDO" keyProperty="id">
+		insert into act_auther_document_main
+		(
+			`id`,
+			`auther_id`,
+			`auther_user`,
+			`application_no`
+		)
+		values
+		(
+			#{id},
+			#{autherId},
+			#{autherUser},
+			#{applicationNo}
+		)
+	</insert>
+
+	<insert id="saveAutherRoleMain" parameterType="com.metro.ccms.web.activiti.domain.AutherRoleMainDO" keyProperty="id">
+		insert into act_auther_role_main
+		(
+			`id`,
+			`auther_id`,
+			`auther_user`,
+			`application_no`
+		)
+		values
+		(
+			#{id},
+			#{autherId},
+			#{autherUser},
+			#{applicationNo}
+		)
+	</insert>
+
+	<delete id="deleteAutherDoById">
+		delete from act_auther_document where id=#{id}
+	</delete>
+
+	<select id="getAutherDoListByMainId" resultType="com.metro.ccms.web.activiti.domain.AutherDocumentDO">
+		select * from act_auther_document where main_id=#{mainId}
+	</select>
+
+	<delete id="deleteAutherDoMainById">
+		delete from act_auther_document_main where id=#{id}
+	</delete>
+
+	<select id="getAutherDocumentlistPage" parameterType="com.metro.ccms.web.activiti.query.AutherDocumentQuery"
+			resultType="com.metro.ccms.web.activiti.domain.AutherDocumentDO">
+		select * from act_auther_document
+		<where>
+			<if test="autherUser != null and autherUser != ''">
+				and auther_user like '%${autherUser}%'
+			</if>
+			<if test="receiveUser != null and receiveUser != ''">
+				and receive_user like '%${receiveUser}%'
+			</if>
+			<if test="applicationNo != null and applicationNo !=''">
+				and application_no =  #{applicationNo}
+			</if>
+			<if test="status != null">
+				and status =  #{status}
+			</if>
+			<if test="beginTime != null">
+				and date_format(auther_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+			</if>
+			<if test="endTime != null">
+				and date_format(auther_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+			</if>
+		</where>
+		order by auther_time desc
+	</select>
+
+	<select id="getAutherRolelistPage" parameterType="com.metro.ccms.web.activiti.query.AutherRoleQuery"
+			resultType="com.metro.ccms.web.activiti.domain.AutherRoleDO">
+		select * from act_auther_role
+		<where>
+			<if test="autherUser != null and autherUser != ''">
+				and auther_user like '%${autherUser}%'
+			</if>
+			<if test="receiveUser != null and receiveUser != ''">
+				and receive_user like '%${receiveUser}%'
+			</if>
+			<if test="applicationNo != null and applicationNo !=''">
+				and application_no =  #{applicationNo}
+			</if>
+			<if test="status != null">
+				and status =  #{status}
+			</if>
+			<if test="beginTime != null">
+				and date_format(auther_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+			</if>
+			<if test="endTime != null">
+				and date_format(auther_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+			</if>
+		</where>
+		order by auther_time desc
+	</select>
+
+	<insert id="saveAutherRole" parameterType="com.metro.ccms.web.activiti.domain.AutherRoleDO"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into act_auther_role
+		(
+			`id`,
+			`main_id`,
+			`auther_id`,
+			`auther_user`,
+			`auther_role_id`,
+			`auther_role_name`,
+			`receive_id`,
+			`receive_user`,
+			`receive_role_id`,
+			`receive_role_name`,
+			`begin_time`,
+			`end_time`,
+			`auther_role`,
+			`auther_role_na`
+		)
+		values
+		(
+			#{id},
+			#{mainId},
+			#{autherId},
+			#{autherUser},
+			#{autherRoleId},
+			#{autherRoleName},
+			#{receiveId},
+			#{receiveUser},
+			#{receiveRoleId},
+			#{receiveRoleName},
+			#{beginTime},
+			#{endTime},
+			#{autherRole},
+			#{autherRoleNa}
+		)
+	</insert>
+
+	<select id="getAutherRoleByUser" resultType="int">
+		select count(*) from act_auther_role where auther_role=#{roleId} and receive_id=#{receiveId} and status=1
+	</select>
+
+	<delete id="deleteAutherRoleById">
+		delete from act_auther_role where id=#{id}
+	</delete>
+
+	<select id="getAutherRoleListByMainId" resultType="com.metro.ccms.web.activiti.domain.AutherRoleDO">
+		select * from act_auther_role where main_id=#{mainId}
+	</select>
+
+	<delete id="deleteAutherRoleMainById">
+		delete from act_auther_role_main where id=#{id}
+	</delete>
+
+	<select id="getAutherDoCountByTaskId" resultType="com.metro.ccms.web.activiti.domain.AutherDocumentDO">
+		select receive_id,receive_user from act_auther_document where task_id=#{taskId} and status=1
+	</select>
+
+	<update id="deleteDo">
+		update act_auther_document set status=0 where id=#{id}
+	</update>
+
+	<update id="deleteRole">
+		update act_auther_role set status=0 where id=#{id}
+	</update>
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.debtprotection.mapper.InvoiceMapper">
+  <resultMap id="BaseResultMap" type="com.metro.ccms.web.debtprotection.domian.InvoiceDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+    <result column="comp_code" jdbcType="VARCHAR" property="compCode" />
+    <result column="policyno" jdbcType="VARCHAR" property="policyno" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="polic_id" jdbcType="VARCHAR" property="policId" />
+    <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo" />
+    <result column="buyerno" jdbcType="VARCHAR" property="buyerno" />
+    <result column="invoicesum" jdbcType="DOUBLE" property="invoicesum" />
+    <result column="invoicedate" jdbcType="TIMESTAMP" property="invoicedate" />
+    <result column="qztype" jdbcType="VARCHAR" property="qztype" />
+    <result column="clientno" jdbcType="VARCHAR" property="clientno" />
+    <result column="baseapply" jdbcType="TINYINT" property="baseapply" />
+    <result column="btime" jdbcType="TIMESTAMP" property="btime" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+    <result column="quota_days" jdbcType="INTEGER" property="quotaDays" />
+    <result column="cust_code" jdbcType="VARCHAR" property="custCode" />
+    <result column="cust_name" jdbcType="VARCHAR" property="custName" />
+    <result column="insuresum" jdbcType="DECIMAL" property="insuresum"/>
+    <result column="paymode" jdbcType="VARCHAR" property="paymode"/>
+  </resultMap>
+  <resultMap id="Map" type="com.metro.ccms.web.debtprotection.vo.InsuranceManagementVO">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="comp_code" jdbcType="VARCHAR" property="compCode"/>
+    <result column="comp_name" jdbcType="VARCHAR" property="compName"/>
+    <result column="buyerno" jdbcType="VARCHAR" property="buyerno"/>
+    <result column="cust_code" jdbcType="VARCHAR" property="custCode"/>
+    <result column="cust_name" jdbcType="VARCHAR" property="custName"/>
+    <result column="policyno" jdbcType="VARCHAR" property="policyno"/>
+    <result column="credit_level" jdbcType="VARCHAR" property="creditLevel"/>
+    <result column="quota" jdbcType="DECIMAL" property="quota"/>
+    <result column="quota_days" jdbcType="INTEGER" property="quotaDays"/>
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="status" jdbcType="TINYINT" property="status"/>
+    <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp"/>
+    <result column="reason" jdbcType="VARCHAR" property="reason"/>
+    <result column="contract_no" jdbcType="VARCHAR" property="contractNo"/>
+    <result column="lcno" jdbcType="VARCHAR" property="lcno"/>
+    <result column="body" jdbcType="VARCHAR" property="body"/>
+    <result column="polic_id" jdbcType="BIGINT" property="policId"/>
+    <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo"/>
+    <result column="invoicesum" jdbcType="DECIMAL" property="invoicesum"/>
+    <result column="invoicedate" jdbcType="TIMESTAMP" property="invoicedate"/>
+    <result column="qztype" jdbcType="VARCHAR" property="qztype"/>
+    <result column="clientno" jdbcType="VARCHAR" property="clientno"/>
+    <result column="btime" jdbcType="TIMESTAMP" property="btime"/>
+    <result column="etime" jdbcType="TIMESTAMP" property="etime"/>
+    <result column="insuresum" jdbcType="DECIMAL" property="insuresum"/>
+    <result column="paymode" jdbcType="VARCHAR" property="paymode"/>
+    <result column="transportdate" jdbcType="TIMESTAMP" property="transportdate"/>
+    <result column="code10" jdbcType="VARCHAR" property="code10"/>
+    <result column="goodsname" jdbcType="VARCHAR" property="goodsname"/>
+    <result column="employeename" jdbcType="VARCHAR" property="employeename"/>
+    <result column="ifoversea" jdbcType="TINYINT" property="ifoversea"/>
+    <result column="premiumrate" jdbcType="DECIMAL" property="premiumrate"/>
+    <result column="premium" jdbcType="DECIMAL" property="premium"/>
+    <result column="dollarrate" jdbcType="DECIMAL" property="dollarrate"/>
+    <result column="country_code" jdbcType="VARCHAR" property="countryCode"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, created_by, create_time, updated_by, update_time, `status`, deleted, item1, item2,
+    item3, item4, item5, item6, item7, item8, item9, comp_code, policyno, body, polic_id, 
+    invoice_no, buyerno, invoicesum, invoicedate, qztype, clientno, baseapply, btime, 
+    etime, quota_days, cust_code, cust_name , insuresum, paymode
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_sf_invoice
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="list" resultMap="Map">
+    select
+    <include refid="Base_Column_List" />
+    from tb_sf_invoice
+    where baseapply = 0
+    <trim suffixOverrides="and | or">
+      <if test="custCode != null and custCode != ''">
+        and cust_code = #{custCode,jdbcType=VARCHAR}
+      </if>
+      <if test="custName != null and custName != ''">
+        and cust_name like concat('%',#{custName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="beginDate != null and endDate != null">
+        and invoicedate BETWEEN #{beginDate} AND #{endDate}
+      </if>
+    </trim>
+    order by create_time desc
+  </select>
+  <update id="update" parameterType="java.lang.String">
+    update tb_sf_invoice
+    set baseapply = '1'
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="delete" parameterType="com.metro.ccms.web.debtprotection.domian.InsureDO">
+    UPDATE tb_sf_invoice
+    SET baseapply = 0
+    WHERE
+    invoice_no = #{invoiceNo,jdbcType=VARCHAR}
+    AND
+    invoicedate = #{invoicedate,jdbcType=TIMESTAMP}
+  </update>
+
+
+</mapper>

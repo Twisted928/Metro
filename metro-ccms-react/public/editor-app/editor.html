@@ -1,0 +1,238 @@
+<div ng-controller="StencilController">
+  <!-- 导航条 -->
+  <div class="subheader editor-toolbar bgColor" id="editor-header">
+    <div class="bgnav">
+      <div class="btn-toolbar pull-left iconlist" ng-controller="ToolbarController" ng-cloak>
+        <!-- <div class="actionIconfont" ng-click="toolbarButtonClicked(0)">
+          <span class="iconfont">&#xe612;</span>
+          <span class="icontext">保存</span>
+		</div> -->
+        <!-- <div class="iconLine"></div> -->
+        <div class="actionIconfont" ng-click="toolbarButtonClicked(2)">
+          <span class="iconfont">&#xe622;</span>
+          <span class="icontext">剪切</span>
+        </div>
+        <div class="actionIconfont iconmargin" ng-click="toolbarButtonClicked(3)">
+          <span class="iconfont">&#xe61b;</span>
+          <span class="icontext">复制</span>
+        </div>
+        <div class="actionIconfont iconmarginRight" ng-click="toolbarButtonClicked(4)">
+          <span class="iconfont">&#xe614;</span>
+          <span class="icontext">粘贴</span>
+        </div>
+        <div class="actionIconfont" ng-click="toolbarButtonClicked(5)">
+          <span class="iconfont">&#xe61d;</span>
+          <span class="icontext">删除</span>
+        </div>
+        <div class="iconLine"></div>
+        <div class="actionIconfont iconmarginRight" ng-click="toolbarButtonClicked(7)">
+          <span class="iconfont">&#xe613;</span>
+          <span class="icontext">重复</span>
+        </div>
+        <div class="actionIconfont" ng-click="toolbarButtonClicked(8)">
+          <span class="iconfont">&#xe61e;</span>
+          <span class="icontext">撤销</span>
+        </div>
+        <div class="iconLine"></div>
+        <div class="actionIconfont" ng-click="toolbarButtonClicked(10)">
+          <span class="iconfont">&#xe61a;</span>
+          <span class="icontext">垂直</span>
+        </div>
+        <div class="actionIconfont iconmargin" ng-click="toolbarButtonClicked(11)">
+          <span class="iconfont">&#xe61f;</span>
+          <span class="icontext">水平</span>
+        </div>
+        <div class="actionIconfont" ng-click="toolbarButtonClicked(12)">
+          <span class="iconfont">&#xe618;</span>
+          <span class="icontext">相同</span>
+        </div>
+        <div class="iconLine"></div>
+        <div class="actionIconfont" ng-click="toolbarButtonClicked(14)">
+          <span class="iconfont">&#xe619;</span>
+          <span class="icontext">放大</span>
+        </div>
+        <div class="actionIconfont iconmargin" ng-click="toolbarButtonClicked(15)">
+          <span class="iconfont">&#xe616;</span>
+          <span class="icontext">缩小</span>
+        </div>
+        <div class="actionIconfont iconmarginRight" ng-click="toolbarButtonClicked(16)">
+          <span class="iconfont">&#xe621;</span>
+          <span class="icontext">实际</span>
+        </div>
+        <div class="actionIconfont" ng-click="toolbarButtonClicked(17)">
+          <span class="iconfont">&#xe617;</span>
+          <span class="icontext">适应</span>
+        </div>
+        <div class="iconLine"></div>
+        <div class="actionIconfont iconmarginRight" ng-click="toolbarButtonClicked(19)">
+          <span class="iconfont">&#xe61c;</span>
+          <span class="icontext">添弯</span>
+        </div>
+        <div class="actionIconfont" ng-click="toolbarButtonClicked(20)">
+          <span class="iconfont">&#xe620;</span>
+          <span class="icontext">删弯</span>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center" ng-controller="ToolbarController">
+      <div class="closeBtu iconbtu" ng-click="toolbarSecondaryButtonClicked(0)">取消</div>
+      <div class="savebtu iconbtu" ng-click="toolbarButtonClicked(0)">保存</div>
+    </div>
+  </div>
+
+  <div class="full fullnew">
+    <div class="row row-no-gutter">
+      <div id="paletteHelpWrapper" class="col-xs-2 leftNav">
+        <div class="stencils stencilsnew" id="paletteSection">
+          <div ng-if="stencilItemGroups.length > 1">
+            <div ng-repeat="group in stencilItemGroups">
+              <ul
+                ng-if="group.visible && group.items"
+                class="stencil-group"
+                ng-class="{collapsed: !group.expanded, 'first': $first}"
+              >
+                <li ng-include="'editor-app/partials/stencil-item-template.html?version=4'"></li>
+              </ul>
+              <div
+                ng-if="!group.items"
+                ng-include="'editor-app/partials/root-stencil-item-template.html?version=4'"
+              ></div>
+            </div>
+          </div>
+          <div ng-if="stencilItemGroups.length == 1">
+            <ul class="stencil-group">
+              <li
+                ng-repeat="item in stencilItemGroups[0].paletteItems"
+                class="stencil-item"
+                id="{{item.id}}"
+                title="{{item.description}}"
+                ng-model="draggedElement"
+                data-drag="true"
+                jqyoui-draggable="{onStart:'startDragCallback', onDrag:'dragCallback'}"
+                data-jqyoui-options="{revert: 'invalid', helper: 'clone', opacity : 0.5}"
+              >
+                <img
+                  ng-src="editor-app/stencilsets/bpmn2.0/icons/{{item.icon}}"
+                  width="16px;"
+                  height="16px;"
+                />
+                {{item.name}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div id="canvasHelpWrapper" class="col-xs-10 rightTop">
+        <div
+          style="overflow: hidden; background-color: #fff"
+          class="canvas-wrapper"
+          id="canvasSection"
+          ng-model="droppedElement"
+          ng-model="droppedElement"
+          data-drop="true"
+          data-jqyoui-options
+          jqyoui-droppable="{onDrop:'dropCallback',onOver: 'overCallback', onOut: 'outCallback'}"
+        >
+          <div class="canvas-message" id="model-modified-date"></div>
+          <div
+            class="Oryx_button"
+            id="delete-button"
+            title="{{'BUTTON.ACTION.DELETE.TOOLTIP' | translate}}"
+            ng-click="deleteShape()"
+            style="display: none"
+          >
+            <img src="editor-app/images/delete.png" />
+          </div>
+          <div
+            class="Oryx_button"
+            id="morph-button"
+            title="{{'BUTTON.ACTION.MORPH.TOOLTIP' | translate}}"
+            ng-click="morphShape()"
+            style="display: none"
+          >
+            <img src="editor-app/images/wrench.png" />
+          </div>
+          <div
+            class="Oryx_button"
+            ng-repeat="item in quickMenuItems"
+            id="{{item.id}}"
+            title="{{item.description}}"
+            ng-click="quickAddItem(item.id)"
+            ng-model="draggedElement"
+            data-drag="true"
+            jqyoui-draggable="{onStart:'startDragCallbackQuickMenu', onDrag:'dragCallbackQuickMenu'}"
+            data-jqyoui-options="{revert: 'invalid', helper: 'clone', opacity : 0.5}"
+            style="display: none"
+          >
+            <img ng-src="editor-app/stencilsets/bpmn2.0/icons/{{item.icon}}" />
+          </div>
+        </div>
+      </div>
+      <div id="propertiesHelpWrapper" class="col-xs-10 rightBottom">
+        <div class="propertySection" id="propertySection">
+          <div class="selected-item-section">
+            <div class="clearfix">
+              <div class="pull-right" ng-if="selectedItem.auditData.createDate">
+                <strong>{{'ELEMENT.DATE_CREATED' | translate}}: </strong>
+                {{selectedItem.auditData.createDate}}
+              </div>
+              <div class="pull-right" ng-if="selectedItem.auditData.author">
+                <strong>{{'ELEMENT.AUTHOR' | translate}}: </strong>
+                {{selectedItem.auditData.author}}
+              </div>
+              <div
+                class="selected-item-title selectItemTitle"
+              >
+                <a ng-click="propertyWindowState.toggle()">
+                  <!-- <i
+                    class="glyphicon"
+                    ng-class="{'glyphicon-chevron-right': propertyWindowState.collapsed, 'glyphicon-chevron-down': !propertyWindowState.collapsed}"
+                  ></i> -->
+                  <span class="titleText"
+                    ng-show="selectedItem.title != undefined && selectedItem.title != null && selectedItem.title.length > 0"
+                    >{{selectedItem.title}}</span
+                  >
+                  <span
+                    ng-show="!selectedItem || selectedItem.title == undefined || selectedItem.title == null || selectedItem.title.length == 0"
+                    >{{modelData.name}}</span
+                  >
+                </a>
+              </div>
+            </div>
+            <div class="selected-item-body selectItemBody">
+              <div>
+                <div
+                  class="property-row spanText"
+                  ng-repeat="property in selectedItem.properties"
+                  ng-click="propertyClicked($index)"
+                  ng-class="{'clear' : $index%2 == 0}"
+                >
+                  <span class="title newTitle" ng-if="!property.hidden">{{ property.title }}&nbsp;:</span>
+                  <span class="title-removed" ng-if="property.hidden"
+                    ><i
+                      >{{ property.title }}&nbsp;({{'PROPERTY.REMOVED' | translate}})&nbsp;:</i
+                    ></span
+                  >
+                  <span class="value">
+                    <ng-include
+                      src="getPropertyTemplateUrl($index)"
+                      ng-if="!property.hasReadWriteMode"
+                    ></ng-include>
+                    <ng-include
+                      src="getPropertyReadModeTemplateUrl($index)"
+                      ng-if="property.hasReadWriteMode && property.mode == 'read'"
+                    ></ng-include>
+                    <ng-include
+                      src="getPropertyWriteModeTemplateUrl($index)"
+                      ng-if="property.hasReadWriteMode && property.mode == 'write'"
+                    ></ng-include>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

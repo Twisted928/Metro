@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.model.mapper.ModelResultMainMapper">
+
+	<sql id="base_sql">
+		`id`,`mod_id`,`documentNo`,`score`,`addsub_score` as addSubScore,`index_score` as indexScore,`create_time`,`created_by`,`update_time`,`updated_by`,`type`
+	</sql>
+	
+	<select id="get" resultType="com.metro.ccms.web.model.domain.ModelResultMainDO">
+		select 
+		 <include refid="base_sql"></include>
+		 from model_result_main where id = #{id}
+	</select>
+	
+	<select id="getLastResult" resultType="com.metro.ccms.web.model.domain.ModelResultMainDO">
+		select
+		 <include refid="base_sql"></include>
+		from model_result_main where documentNo = #{documentNo}
+		order by create_time desc LIMIT 1
+	</select>
+
+	<select id="list" resultType="com.metro.ccms.web.model.domain.ModelResultMainDO">
+		select
+		<include refid="base_sql"></include>
+		from model_result_main
+	</select>
+	
+
+	<insert id="save" parameterType="com.metro.ccms.web.model.domain.ModelResultMainDO" keyProperty="id">
+		insert into model_result_main
+		(
+			`mod_id`, 
+			`documentNo`,
+			`score`,
+			`addsub_score`,
+			`index_score`,
+			`create_time`,
+			`created_by`, 
+			`update_time`, 
+			`updated_by`,
+			`type`
+		)
+		values
+		(
+			#{modId}, 
+			#{documentNo},
+			#{score},
+			#{addSubScore},
+			#{indexScore},
+			#{createTime}, 
+			#{createdBy}, 
+			#{updateTime}, 
+			#{updatedBy},
+			#{type}
+		)
+	</insert>
+	 
+
+
+</mapper>

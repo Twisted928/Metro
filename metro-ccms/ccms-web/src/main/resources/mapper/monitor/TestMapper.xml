@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.monitor.mapper.TestMapper">
+  <cache type="com.metro.ccms.framework.monitor.MybatisRedisCache"/>
+    <cache/>
+    
+	<resultMap id="monitorMap" type="com.metro.ccms.web.monitor.domain.MonitorDO">
+        <id property="id" column="id" javaType="int" jdbcType="INTEGER" />
+        <result property="traceId" column="trace_id"/>
+        <result property="uuid" column="uuid"/>
+		<result property="parentUuid" column="parent_uuid"/>
+		<result property="uri" column="uri"/>
+		<result property="startDate" column="start_date"/>
+		<result property="endDate" column="end_date"/>
+		<result property="costTime" column="cost_time"/>
+		<result property="classType" column="class_type"/>
+		<result property="ifException" column="if_exception"/>
+		<result property="exception" column="exception"/>
+		<result property="sqlMemo" column="sql_memo"/>
+		<result property="ddate" column="ddate"/>
+    </resultMap> 
+    
+ 
+	 <select id="lstJwMonitor"  resultMap="monitorMap">
+
+          select * from tb_monitor
+ 
+    </select>
+</mapper>

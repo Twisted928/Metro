@@ -1,0 +1,43 @@
+import request from 'umi-request';
+
+// 查询${functionName}列表
+export function list${BusinessName}(query) {
+  return request('/${moduleName}/${businessName}/list', {
+    params: query
+  })
+}
+
+// 查询${functionName}详细
+export function get${BusinessName}(${pkColumn.javaField}) {
+  return request('/${moduleName}/${businessName}/' + ${pkColumn.javaField})
+}
+
+// 新增${functionName}
+export function add${BusinessName}(data) {
+  return request('/${moduleName}/${businessName}', {
+    method: 'POST',
+    data
+  })
+}
+
+// 修改${functionName}
+export function update${BusinessName}(data) {
+  return request('/${moduleName}/${businessName}', {
+    method: 'PUT',
+    data
+  })
+}
+
+// 删除${functionName}
+export function del${BusinessName}(${pkColumn.javaField}) {
+  return request('/${moduleName}/${businessName}/' + ${pkColumn.javaField}, {
+    method: 'DELETE'
+  })
+}
+
+// 导出${functionName}
+export function export${BusinessName}(query) {
+  return request('/${moduleName}/${businessName}/export', {
+    params: query
+  })
+}

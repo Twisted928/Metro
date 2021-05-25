@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.debtprotection.mapper.ClaimProgressMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.debtprotection.domian.ClaimProgressDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="caseno" jdbcType="VARCHAR" property="caseno"/>
+        <result column="case_progress" jdbcType="VARCHAR" property="caseProgress"/>
+        <result column="case_status" jdbcType="VARCHAR" property="caseStatus"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="main_id" jdbcType="BIGINT" property="mainId"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+        <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp"/>
+        <result column="attachitems" jdbcType="VARCHAR" property="attachitems"/>
+        <result column="attachment_name" jdbcType="VARCHAR" property="attachmentName"/>
+        <result column="attachment_url" jdbcType="VARCHAR" property="attachmentUrl"/>
+        <result column="cust_code" jdbcType="VARCHAR" property="custCode"/>
+        <result column="cust_name" jdbcType="VARCHAR" property="custName"/>
+        <result column="declaration" jdbcType="VARCHAR" property="declaration"/>
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , caseno, case_progress, case_status, created_by, create_time, main_id, updated_by,
+    update_time, `status`, deleted, item1, item2, item3, item4, item5, item6, item7, 
+    item8, item9, `timestamp`, attachitems, attachment_name, attachment_url, cust_code, 
+    cust_name, declaration, invoice_no
+    </sql>
+
+    <insert id="save" keyColumn="id" keyProperty="id"
+            parameterType="com.metro.ccms.web.debtprotection.domian.ClaimProgressDO" useGeneratedKeys="true">
+        insert into tb_sf_claim_progress
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="caseno != null and caseno != ''">
+                caseno,
+            </if>
+            <if test="caseProgress != null and caseno != ''">
+                case_progress,
+            </if>
+            <if test="caseStatus != null and caseno != ''">
+                case_status,
+            </if>
+            <if test="createdBy != null and caseno != ''">
+                created_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="mainId != null">
+                main_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="caseno != null and caseno != ''">
+                #{caseno,jdbcType=VARCHAR},
+            </if>
+            <if test="caseProgress != null and caseno != ''">
+                #{caseProgress,jdbcType=VARCHAR},
+            </if>
+            <if test="caseStatus != null and caseno != ''">
+                #{caseStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null and caseno != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mainId != null">
+                #{mainId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.metro.ccms.web.debtprotection.domian.ClaimProgressDO" useGeneratedKeys="true">
+        insert into tb_sf_claim_progress
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="caseno != null and caseno != ''">
+                caseno,
+            </if>
+            <if test="caseProgress != null and caseno != ''">
+                case_progress,
+            </if>
+            <if test="caseStatus != null and caseno != ''">
+                case_status,
+            </if>
+            <if test="createdBy != null and caseno != ''">
+                created_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="mainId != null">
+                main_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="caseno != null and caseno != ''">
+                #{caseno,jdbcType=VARCHAR},
+            </if>
+            <if test="caseProgress != null and caseno != ''">
+                #{caseProgress,jdbcType=VARCHAR},
+            </if>
+            <if test="caseStatus != null and caseno != ''">
+                #{caseStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null and caseno != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mainId != null">
+                #{mainId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.metro.ccms.web.debtprotection.domian.ClaimProgressDO">
+        update tb_sf_claim_progress
+        <set>
+            <if test="caseProgress != null">
+                case_progress = #{caseProgress,jdbcType=VARCHAR},
+            </if>
+            <if test="caseStatus != null">
+                case_status = #{caseStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updatedBy != null">
+                updated_by = #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        where caseno = #{caseno,jdbcType=VARCHAR} and main_id = #{mainId,jdbcType=BIGINT} and id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="getMaxDate" resultType="java.lang.Integer">
+        SELECT count(0)
+        FROM tb_sf_claim_progress
+        WHERE caseno = #{caseno,jdbcType=VARCHAR}
+          AND main_id = #{mainId,jdbcType=BIGINT}
+          AND deleted = 0
+          AND <![CDATA[ create_time < (CURDATE() + 1)
+          AND create_time > CURDATE()
+        ]]>
+    </select>
+    <select id="getList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_claim_progress
+        where main_id = #{id,jdbcType=BIGINT}
+        and caseno = #{caseno,jdbcType=VARCHAR}
+        and deleted = 0
+    </select>
+    <select id="getCaseStatus" resultType="com.metro.ccms.web.debtprotection.domian.ClaimProgressDO">
+        SELECT id,
+               case_status AS caseStatus
+        FROM tb_sf_claim_progress
+        WHERE id = (
+            SELECT max(id)
+            FROM tb_sf_claim_progress
+            WHERE main_id = #{id,jdbcType=BIGINT}
+              and deleted = 0)
+    </select>
+    <select id="getByMainId" resultType="java.lang.Integer">
+        select count(0)
+        from tb_sf_claim_progress
+        where deleted = 0
+          and main_id = #{id}
+    </select>
+    <update id="delete" parameterType="com.metro.ccms.web.debtprotection.domian.ClaimProgressDO">
+        update tb_sf_claim_progress
+        set deleted     = 1,
+            updated_by  = #{updatedBy,jdbcType=VARCHAR},
+            update_time = CURRENT_TIMESTAMP
+        where main_id = #{id,jdbcType=BIGINT}
+          and caseno = #{caseno,jdbcType=VARCHAR}
+    </update>
+    <update id="ledgerDelete">
+        update tb_sf_claim_progress
+        set deleted     = 1,
+            updated_by  = #{updatedBy,jdbcType=VARCHAR},
+            update_time = CURRENT_TIMESTAMP
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

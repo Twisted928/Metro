@@ -1,0 +1,54 @@
+<div class="modal" ng-controller="KisBpmConditionExpressionPopupCtrl">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background: #fff; height: 55px">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+          ng-click="close()"
+        >
+          &times;
+        </button>
+        <span translate style="font-size: 16px; color: #000; font-weight: bold"
+          >PROPERTY.SEQUENCEFLOW.CONDITION.TITLE</span
+        >
+      </div>
+      <div class="modal-body" style="padding: 0px">
+        <div class="detail-group clearfix" style="padding: 20px">
+          <div class="form-group clearfix">
+            <div
+              style="
+                display: flex;
+                width: 200px;
+                align-items: baseline;
+                justify-content: space-between;
+              "
+            >
+              <label>{{ "PROPERTY.SEQUENCEFLOW.CONDITION.STATIC" | translate }}</label>
+              <!-- <textarea class="form-control" ng-model="conditionExpression.value" style="width:90%; height:100%; max-width: 100%; max-height: 100%; min-height: 100px"/> -->
+
+              <span class="radio" ng-repeat="expression in conditionExpression.expressionList">
+                <label>
+                  <input
+                    type="radio"
+                    name="expressionRadios"
+                    ng-model="conditionExpression.value"
+                    id="{{expression.expression}}"
+                    value="{{expression.expression}}"
+                  />
+                  {{expression.des}}
+                </label>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top: 0px">
+          <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>
+          <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

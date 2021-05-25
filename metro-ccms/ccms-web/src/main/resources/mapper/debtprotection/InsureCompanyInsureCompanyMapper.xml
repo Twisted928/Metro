@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.debtprotection.mapper.InsureCompanyInsureCompanyMapper">
+  <resultMap id="BaseResultMap" type="com.metro.ccms.web.debtprotection.domian.InsureCompanyDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="comp_code" jdbcType="VARCHAR" property="compCode" />
+    <result column="comp_name" jdbcType="VARCHAR" property="compName" />
+    <result column="valid_from" jdbcType="TIMESTAMP" property="validFrom" />
+    <result column="valid_to" jdbcType="TIMESTAMP" property="validTo" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+  </resultMap>
+  <resultMap id="Map" type="com.metro.ccms.web.debtprotection.vo.InsuranceCombinationVO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="comp_code" jdbcType="VARCHAR" property="compCode" />
+    <result column="comp_name" jdbcType="VARCHAR" property="compName" />
+    <result column="valid_from" jdbcType="TIMESTAMP" property="validFrom" />
+    <result column="valid_to" jdbcType="TIMESTAMP" property="validTo" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, comp_code, comp_name, valid_from, valid_to, created_by, create_time, updated_by, 
+    update_time, `status`, deleted, item1, item2, item3, item4, item5, item6, item7, 
+    item8, item9
+  </sql>
+
+  <select id="listInsuranceCompanyManagements" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_sf_insure_company
+    where
+    deleted = 0
+    <trim suffixOverrides="and | or">
+    <if test="compName != null and compName !=''" >
+      and comp_name like concat('%',#{compName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="status != null">
+      and `status` = #{status,jdbcType=TINYINT}
+    </if>
+    </trim>
+    order by create_time desc
+  </select>
+  <select id="getCompanyCode" resultType="java.lang.Integer">
+    select count(comp_code) from tb_sf_insure_company where comp_code = #{compCode,jdbcType=VARCHAR} and deleted = 0
+  </select>
+
+
+    <insert id="saveInsuranceManagement" keyColumn="id" keyProperty="id" parameterType="com.metro.ccms.web.debtprotection.vo.InsuranceCombinationVO" useGeneratedKeys="true">
+    insert into tb_sf_insure_company
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="compCode != null and compCode != ''">
+        comp_code,
+      </if>
+      <if test="compName != null and compName != ''">
+        comp_name,
+      </if>
+      <if test="validFrom != null">
+        valid_from,
+      </if>
+      <if test="validTo != null">
+        valid_to,
+      </if>
+      <if test="createdBy != null and createdBy != ''">
+        created_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updatedBy != null and updatedBy != ''">
+        updated_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="compCode != null and compCode != ''">
+        #{compCode,jdbcType=VARCHAR},
+      </if>
+      <if test="compName != null and compName != ''">
+        #{compName,jdbcType=VARCHAR},
+      </if>
+      <if test="validFrom != null">
+        #{validFrom,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validTo != null">
+        #{validTo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null and createdBy != ''">
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null and updatedBy != ''">
+        #{updatedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="com.metro.ccms.web.debtprotection.vo.InsuranceCombinationVO">
+    update tb_sf_insure_company
+    <set>
+      <if test="compCode != null and compCode != ''">
+        comp_code = #{compCode,jdbcType=VARCHAR},
+      </if>
+      <if test="compName != null and compName != ''">
+        comp_name = #{compName,jdbcType=VARCHAR},
+      </if>
+      <if test="validFrom != null">
+        valid_from = #{validFrom,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validTo != null">
+        valid_to = #{validTo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null and createdBy != ''">
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null and updatedBy != ''">
+        updated_by = #{updatedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      update_time = CURRENT_TIMESTAMP
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="delete" parameterType="com.metro.ccms.web.debtprotection.domian.InsureCompanyDO">
+    update tb_sf_insure_company
+    set deleted = '1'
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="Map">
+    select
+    <include refid="Base_Column_List"/>
+    from tb_sf_insure_company
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+    <select id="getCompanyName" resultType="java.lang.Integer">
+      select count(comp_name) from tb_sf_insure_company where comp_name = #{compName,jdbcType=VARCHAR} and deleted = 0
+    </select>
+</mapper>

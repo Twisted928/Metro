@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.debtprotection.mapper.InsurePolicyMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.debtprotection.vo.InsurePolicyVO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="comp_code" jdbcType="VARCHAR" property="compCode"/>
+        <result column="comp_name" jdbcType="VARCHAR" property="compName"/>
+        <result column="policyno" jdbcType="VARCHAR" property="policyno"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="body" jdbcType="VARCHAR" property="body"/>
+        <result column="policy_sum" jdbcType="DECIMAL" property="policySum"/>
+        <result column="maxpay_sum" jdbcType="DECIMAL" property="maxpaySum"/>
+        <result column="pay_lv" jdbcType="DECIMAL" property="payLv"/>
+        <result column="payperiod" jdbcType="INTEGER" property="payperiod"/>
+        <result column="quotafree" jdbcType="INTEGER" property="quotafree"/>
+        <result column="paywait" jdbcType="INTEGER" property="paywait"/>
+        <result column="currency" jdbcType="VARCHAR" property="currency"/>
+        <result column="valid_from" jdbcType="TIMESTAMP" property="validFrom"/>
+        <result column="valid_to" jdbcType="TIMESTAMP" property="validTo"/>
+        <result column="polic_id" jdbcType="VARCHAR" property="policId"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , comp_code, comp_name, policyno, `status`, body, policy_sum, maxpay_sum, pay_lv,
+    payperiod, quotafree, paywait, currency, valid_from, valid_to, polic_id, created_by, 
+    create_time, updated_by, update_time, deleted, item1, item2, item3, item4, item5, 
+    item6, item7, item8, item9
+    </sql>
+    <update id="deleteById">
+        update tb_sf_insure_policy
+        <set>
+            deleted = '1'
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getId" resultType="java.lang.String">
+        select MAX(id)
+        from tb_sf_insure_policy
+    </select>
+    <select id="getByCompCode" resultMap="BaseResultMap">
+        select id,
+               comp_code,
+               comp_name,
+               policyno,
+               `status`,
+               body,
+               policy_sum,
+               maxpay_sum,
+               (pay_lv * 100) pay_lv,
+               payperiod,
+               quotafree,
+               paywait,
+               currency,
+               valid_from,
+               valid_to,
+               polic_id,
+               created_by,
+               create_time,
+               updated_by,
+               update_time,
+               deleted
+        from tb_sf_insure_policy
+        where comp_code = #{compCode,jdbcType=VARCHAR}
+          and deleted = '0'
+    </select>
+    <select id="getByCompanyCode" resultType="java.lang.String">
+        select id
+        from tb_sf_insure_policy
+        where comp_code = #{compCode,jdbcType=VARCHAR}
+          and deleted = 0
+          and `status` = 1
+    </select>
+    <select id="getPolicyNumber" resultType="java.lang.Integer">
+        select count(0)
+        from tb_sf_insure_policy
+        where deleted = 0
+          and `status` = 1
+          and comp_code = #{compCode,jdbcType=VARCHAR}
+          and policyno = #{policyno,jdbcType=VARCHAR}
+    </select>
+    <select id="listPolicy" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_insure_policy
+        where deleted = 0
+        and `status` = 1
+        and valid_to >= CURDATE()
+        <if test="compCode != null and compCode != ''">
+            and comp_code = #{compCode,jdbcType=VARCHAR}
+        </if>
+        <if test="compName != null and compName != ''">
+            and comp_name = #{compName,jdbcType=VARCHAR}
+        </if>
+        <if test="policyno != null and policyno != ''">
+            and policyno = #{policyno,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="getPolicy" resultType="java.lang.Integer">
+        select count(0) from tb_sf_insure_policy
+        where deleted = '0' and `status` = 1 and policyno = #{policyno,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="save" keyColumn="id,create_time" keyProperty="id"
+            parameterType="com.metro.ccms.web.debtprotection.vo.InsurePolicyVO" useGeneratedKeys="true">
+        insert into tb_sf_insure_policy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compCode != null and compCode != ''">
+                comp_code,
+            </if>
+            <if test="compName != null and compName != ''">
+                comp_name,
+            </if>
+            <if test="policyno != null and policyno != ''">
+                policyno,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="body != null and body != ''">
+                body,
+            </if>
+            <if test="policySum != null">
+                policy_sum,
+            </if>
+            <if test="maxpaySum != null">
+                maxpay_sum,
+            </if>
+            <if test="payLv != null">
+                pay_lv,
+            </if>
+            <if test="payperiod != null and payperiod != ''">
+                payperiod,
+            </if>
+            <if test="quotafree != null and quotafree != ''">
+                quotafree,
+            </if>
+            <if test="paywait != null and paywait != ''">
+                paywait,
+            </if>
+            <if test="currency != null and currency != ''">
+                currency,
+            </if>
+            <if test="validFrom != null">
+                valid_from,
+            </if>
+            <if test="validTo != null">
+                valid_to,
+            </if>
+            <if test="policId != null and policId != ''">
+                polic_id,
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                created_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                updated_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compCode != null and compCode != ''">
+                #{compCode,jdbcType=VARCHAR},
+            </if>
+            <if test="compName != null and compName != ''">
+                #{compName,jdbcType=VARCHAR},
+            </if>
+            <if test="policyno != null and policyno != ''">
+                #{policyno,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="body != null and body != ''">
+                #{body,jdbcType=VARCHAR},
+            </if>
+            <if test="policySum != null">
+                #{policySum,jdbcType=DECIMAL},
+            </if>
+            <if test="maxpaySum != null">
+                #{maxpaySum,jdbcType=DECIMAL},
+            </if>
+            <if test="payLv != null">
+                #{payLv,jdbcType=DECIMAL},
+            </if>
+            <if test="payperiod != null and payperiod != ''">
+                #{payperiod,jdbcType=INTEGER},
+            </if>
+            <if test="quotafree != null and quotafree != ''">
+                #{quotafree,jdbcType=INTEGER},
+            </if>
+            <if test="paywait != null and paywait != ''">
+                #{paywait,jdbcType=INTEGER},
+            </if>
+            <if test="currency != null and currency != ''">
+                #{currency,jdbcType=VARCHAR},
+            </if>
+            <if test="validFrom != null">
+                #{validFrom,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validTo != null">
+                #{validTo,jdbcType=TIMESTAMP},
+            </if>
+            <if test="policId != null and policId != ''">
+                #{policId,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.metro.ccms.web.debtprotection.vo.InsurePolicyVO">
+        update tb_sf_insure_policy
+        <set>
+            <if test="policyno != null and policyno != ''">
+                policyno = #{policyno,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="body != null and body != ''">
+                body = #{body,jdbcType=VARCHAR},
+            </if>
+            policy_sum = #{policySum,jdbcType=DECIMAL},
+
+            maxpay_sum = #{maxpaySum,jdbcType=DECIMAL},
+
+            pay_lv = #{payLv,jdbcType=DECIMAL},
+
+            <if test="payperiod != ''">
+                payperiod = #{payperiod,jdbcType=INTEGER},
+            </if>
+            quotafree = #{quotafree,jdbcType=INTEGER},
+
+            <if test="paywait != ''">
+                paywait = #{paywait,jdbcType=INTEGER},
+            </if>
+            <if test="currency != ''">
+                currency = #{currency,jdbcType=VARCHAR},
+            </if>
+            <if test="validFrom != null">
+                valid_from = #{validFrom,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validTo != null">
+                valid_to = #{validTo,jdbcType=TIMESTAMP},
+            </if>
+            <if test="policId != null and policId != ''">
+                polic_id = #{policId,jdbcType=VARCHAR},
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                created_by = #{createdBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedBy != null and updatedBy != ''">
+                updated_by = #{updatedBy,jdbcType=VARCHAR},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=TINYINT},
+            </if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Long">
+        update tb_sf_insure_policy
+        <set>
+            deleted = '1'
+        </set>
+        where comp_code = #{compCode,jdbcType=VARCHAR}
+    </update>
+    <update id="policyDelete" parameterType="java.lang.Long">
+        update tb_sf_insure_policy
+        <set>
+            deleted = '1'
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateStatus" parameterType="com.metro.ccms.web.debtprotection.vo.InsurePolicyVO">
+        update tb_sf_insure_policy
+        <set>
+            `status` = #{status,jdbcType=TINYINT}
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

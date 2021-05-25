@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.model.mapper.ModelInfoIndexItemMapper">
+
+    <select id="get" resultType="com.metro.ccms.web.model.domain.ModelInfoIndexItemDO">
+		select `id`,`mod_index_id`,`upper_value`,`lower_value`,`grade`,`description`,`include_range` from model_info_index_item where id = #{id}
+	</select>
+
+    <select id="list" resultType="com.metro.ccms.web.model.domain.ModelInfoIndexItemDO">
+        select `id`,`mod_index_id`,`upper_value`,`lower_value`,`grade`,`description`,`include_range` from model_info_index_item
+        <where>
+            and mod_index_id = #{modIndexId}
+        </where>
+        order by grade desc
+    </select>
+
+    <select id="listByModId" resultType="com.metro.ccms.web.model.domain.ModelInfoIndexItemDO">
+        select `id`,`mod_index_id`,`upper_value`,`lower_value`,`grade`,`description`,`include_range` from model_info_index_item
+        where mod_index_id in (select id from model_info_index where model_id=#{modId})
+        order by mod_index_id,grade
+    </select>
+
+    <insert id="save" parameterType="com.metro.ccms.web.model.domain.ModelInfoIndexItemDO" keyProperty="id">
+		insert into model_info_index_item
+		(
+			`mod_index_id`,
+			`upper_value`, 
+			`lower_value`, 
+			`grade`, 
+			`description`,
+			`remark`,
+			`include_range`
+		)
+		values
+		(
+			#{modIndexId},
+			#{upperValue}, 
+			#{lowerValue}, 
+			#{grade}, 
+			#{description},
+			#{remark},
+			#{includeRange}
+		)
+	</insert>
+
+    <insert id="batchSave">
+        insert into model_info_index_item
+        (
+        `mod_index_id`,
+        `upper_value`,
+        `lower_value`,
+        `grade`,
+        `description`,
+        `remark`,
+        `include_range`
+        )
+        values
+        <foreach item="item" collection="list" separator=",">
+            (
+            #{item.modIndexId},
+            #{item.upperValue},
+            #{item.lowerValue},
+            #{item.grade},
+            #{item.description},
+            #{item.remark},
+            #{item.includeRange}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.metro.ccms.web.model.domain.ModelInfoIndexItemDO">
+        update model_info_index_item
+        <set>
+            <if test="modIndexId != null">`mod_index_id` = #{modIndexId},</if>
+            <if test="upperValue != null">`upper_value` = #{upperValue},</if>
+            <if test="lowerValue != null">`lower_value` = #{lowerValue},</if>
+            <if test="grade != null">`grade` = #{grade},</if>
+            <if test="description != null">`description` = #{description},</if>
+            <if test="includeRange != null">`include_range` = #{includeRange}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+		delete from model_info_index_item where mod_index_id = #{id}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from model_info_index_item where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getItemByInfoIndexId" resultType="int">
+        select count(*) from model_info_index_item where mod_index_id = #{modIndexId}
+    </select>
+
+</mapper>

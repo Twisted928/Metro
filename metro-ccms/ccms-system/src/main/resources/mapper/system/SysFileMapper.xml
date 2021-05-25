@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.system.mapper.SysFileMapper">
+
+    <resultMap type="com.metro.ccms.system.domain.SysBasicFile" id="TbBasicFileResult">
+        <result property="id"    column="id"    />
+        <result property="createdBy"    column="created_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updatedBy"    column="updated_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="timestamp"    column="timestamp"    />
+        <result property="mainId"    column="main_id"    />
+        <result property="source"    column="source"    />
+        <result property="item1"    column="item1"    />
+        <result property="item2"    column="item2"    />
+        <result property="item3"    column="item3"    />
+        <result property="item4"    column="item4"    />
+        <result property="item5"    column="item5"    />
+        <result property="item6"    column="item6"    />
+        <result property="item7"    column="item7"    />
+        <result property="item8"    column="item8"    />
+        <result property="item9"    column="item9"    />
+        <result property="desc"    column="desc"    />
+        <result property="applicationNo"    column="application_no"    />
+        <result property="attachitems"    column="attachitems"    />
+        <result property="attachmentName"    column="attachment_name"    />
+        <result property="attachmentUrl"    column="attachment_url"    />
+        <result property="ctype"    column="ctype"    />
+    </resultMap>
+
+    <sql id="selectTbBasicFileVo">
+        select id, created_by, create_time, updated_by, update_time, status, deleted, timestamp, main_id, source, item1, item2, item3, item4, item5, item6, item7, item8, item9, application_no, attachitems, attachment_name, attachment_url, ctype from tb_basic_file
+    </sql>
+
+    <select id="getFileListByNoAndType" resultMap="TbBasicFileResult">
+        <include refid="selectTbBasicFileVo"/>
+         where application_no = #{applicationNo} and ctype = #{ctype}
+    </select>
+
+    <select id="selectTbBasicFileList" parameterType="com.metro.ccms.system.domain.SysBasicFile" resultMap="TbBasicFileResult">
+        <include refid="selectTbBasicFileVo"/>
+        <where>
+            <if test="applicationNo != null  and applicationNo != ''"> and application_no = #{applicationNo}</if>
+            <if test="attachitems != null  and attachitems != ''"> and attachitems = #{attachitems}</if>
+            <if test="attachmentName != null  and attachmentName != ''"> and attachment_name like concat('%', #{attachmentName}, '%')</if>
+            <if test="attachmentUrl != null  and attachmentUrl != ''"> and attachment_url = #{attachmentUrl}</if>
+            <if test="ctype != null  and ctype != ''"> and ctype = #{ctype}</if>
+        </where>
+    </select>
+
+    <insert id="insertTbBasicFile" parameterType="com.metro.ccms.system.domain.SysBasicFile" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_basic_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null">created_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updatedBy != null">updated_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="timestamp != null">timestamp,</if>
+            <if test="mainId != null">main_id,</if>
+            <if test="source != null">source,</if>
+            <if test="item1 != null">item1,</if>
+            <if test="item2 != null">item2,</if>
+            <if test="item3 != null">item3,</if>
+            <if test="item4 != null">item4,</if>
+            <if test="item5 != null">item5,</if>
+            <if test="item6 != null">item6,</if>
+            <if test="item7 != null">item7,</if>
+            <if test="item8 != null">item8,</if>
+            <if test="item9 != null">item9,</if>
+            <if test="desc != null">desc,</if>
+            <if test="applicationNo != null">application_no,</if>
+            <if test="attachitems != null">attachitems,</if>
+            <if test="attachmentName != null">attachment_name,</if>
+            <if test="attachmentUrl != null">attachment_url,</if>
+            <if test="ctype != null">ctype,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="timestamp != null">#{timestamp},</if>
+            <if test="mainId != null">#{mainId},</if>
+            <if test="source != null">#{source},</if>
+            <if test="item1 != null">#{item1},</if>
+            <if test="item2 != null">#{item2},</if>
+            <if test="item3 != null">#{item3},</if>
+            <if test="item4 != null">#{item4},</if>
+            <if test="item5 != null">#{item5},</if>
+            <if test="item6 != null">#{item6},</if>
+            <if test="item7 != null">#{item7},</if>
+            <if test="item8 != null">#{item8},</if>
+            <if test="item9 != null">#{item9},</if>
+            <if test="desc != null">#{desc},</if>
+            <if test="applicationNo != null">#{applicationNo},</if>
+            <if test="attachitems != null">#{attachitems},</if>
+            <if test="attachmentName != null">#{attachmentName},</if>
+            <if test="attachmentUrl != null">#{attachmentUrl},</if>
+            <if test="ctype != null">#{ctype},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbBasicFile" parameterType="com.metro.ccms.system.domain.SysBasicFile">
+        update tb_basic_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+            <if test="timestamp != null">timestamp = #{timestamp},</if>
+            <if test="mainId != null">main_id = #{mainId},</if>
+            <if test="source != null">source = #{source},</if>
+            <if test="item1 != null">item1 = #{item1},</if>
+            <if test="item2 != null">item2 = #{item2},</if>
+            <if test="item3 != null">item3 = #{item3},</if>
+            <if test="item4 != null">item4 = #{item4},</if>
+            <if test="item5 != null">item5 = #{item5},</if>
+            <if test="item6 != null">item6 = #{item6},</if>
+            <if test="item7 != null">item7 = #{item7},</if>
+            <if test="item8 != null">item8 = #{item8},</if>
+            <if test="item9 != null">item9 = #{item9},</if>
+            <if test="desc != null">desc = #{desc},</if>
+            <if test="applicationNo != null">application_no = #{applicationNo},</if>
+            <if test="attachitems != null">attachitems = #{attachitems},</if>
+            <if test="attachmentName != null">attachment_name = #{attachmentName},</if>
+            <if test="attachmentUrl != null">attachment_url = #{attachmentUrl},</if>
+            <if test="ctype != null">ctype = #{ctype},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbBasicFileById" parameterType="Long">
+        delete from tb_basic_file where id = #{id}
+    </delete>
+
+    <delete id="deleteTbBasicFileByIds" parameterType="String">
+        delete from tb_basic_file where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    
+</mapper>

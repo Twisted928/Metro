@@ -1,0 +1,97 @@
+export default [
+  {
+    name: '基础模块',
+    path: '/system',
+    icon: 'ControlOutlined',
+    routes: [
+      {
+        name: '用户管理',
+        path: '/system/user',
+        access: 'routeAccess',
+        permission: 'system:user:list',
+        hideChildrenInMenu: true,
+        component: './System/User/index.jsx',
+      },
+      {
+        name: '角色维护',
+        path: '/system/role',
+        access: 'routeAccess',
+        permission: 'system:role:list',
+        hideChildrenInMenu: true,
+        component: './System/Role/index.jsx',
+      },
+      {
+        name: '资源维护',
+        path: '/system/menu',
+        access: 'routeAccess',
+        permission: 'system:menu:list',
+        hideChildrenInMenu: true,
+        component: './System/Resource/index.jsx',
+      },
+      {
+        name: '部门维护',
+        path: '/system/dept',
+        access: 'routeAccess',
+        permission: 'system:dept:list',
+        hideChildrenInMenu: true,
+        component: './System/Department/index.jsx',
+      },
+      {
+        name: '主数据维护',
+        path: '/system/dict',
+        access: 'routeAccess',
+        permission: 'system:dict:list',
+        hideChildrenInMenu: true,
+        component: './System/SysData/index.jsx',
+        // routes: [
+        //   {
+        //     path: '/system/dict',
+        //     component: './System/SysData/index.jsx',
+        //   },
+        //   // {
+        //   //   name: '字典数据',
+        //   //   path: '/system/dict/TypeTableList',
+        //   //   component: './System/SysData/TypeTableList.jsx',
+        //   //   hideInMenu: false,
+        //   //   // access: 'routeAccess',
+        //   // },
+        // ],
+      },
+      {
+        name: '通知公告',
+        path: '/system/notice',
+        access: 'routeAccess',
+        permission: 'system:notice:list',
+        component: './System/Notice/index.jsx',
+      },
+      {
+        name: '日志',
+        path: '/system/log',
+        access: 'routeAccess',
+        // permission: 'system:role:list',
+        component: './System/Log/index.jsx',
+        // routes: [
+        //   {
+        //     name: '操作日志',
+        //     path: '/system/log/operlog',
+        //     component: './System/Log/actionLog.jsx',
+        //     // access: 'routeAccess',
+        //   },
+        //   {
+        //     name: '登录日志',
+        //     path: '/system/log/logininfor',
+        //     component: './System/Log/index.jsx',
+        //     // access: 'routeAccess',
+        //   },
+        // ],
+      },
+      {
+        name: '汇率管理',
+        path: '/system/exchange',
+        access: 'routeAccess',
+        permission: 'system:role:list',
+        component: './System/Exchange/index.jsx',
+      },
+    ],
+  },
+];

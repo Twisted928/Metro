@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.debtprotection.mapper.GuaranteeMapper">
+    <resultMap id="BaseResultMap" type="com.metro.ccms.web.debtprotection.domian.GuaranteeDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="gtcode" jdbcType="VARCHAR" property="gtcode"/>
+        <result column="cust_code" jdbcType="VARCHAR" property="custCode"/>
+        <result column="cust_name" jdbcType="VARCHAR" property="custName"/>
+        <result column="gtsum" jdbcType="DECIMAL" property="gtsum"/>
+        <result column="guaranteetype" jdbcType="VARCHAR" property="guaranteetype"/>
+        <result column="valid_from" jdbcType="TIMESTAMP" property="validFrom"/>
+        <result column="valid_to" jdbcType="TIMESTAMP" property="validTo"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+        <result column="attachitems" jdbcType="VARCHAR" property="attachitems"/>
+        <result column="attachment_name" jdbcType="VARCHAR" property="attachmentName"/>
+        <result column="attachment_url" jdbcType="VARCHAR" property="attachmentUrl"/>
+        <result column="depart_code" jdbcType="VARCHAR" property="departCode"/>
+        <result column="store_code" jdbcType="VARCHAR" property="storeCode"/>
+        <result column="card_code" jdbcType="VARCHAR" property="cardCode"/>
+        <result column="card_name" jdbcType="VARCHAR" property="cardName"/>
+        <result column="benefitor" jdbcType="VARCHAR" property="benefitor"/>
+        <result column="ifloop" jdbcType="TINYINT" property="ifloop"/>
+        <result column="depart_name" jdbcType="VARCHAR" property="departName"/>
+    </resultMap>
+    <resultMap id="Map" type="com.metro.ccms.web.debtprotection.vo.GuaranteeVO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="gtcode" jdbcType="VARCHAR" property="gtcode"/>
+        <result column="cust_code" jdbcType="VARCHAR" property="custCode"/>
+        <result column="cust_name" jdbcType="VARCHAR" property="custName"/>
+        <result column="gtsum" jdbcType="DECIMAL" property="gtsum"/>
+        <result column="guaranteetype" jdbcType="VARCHAR" property="guaranteetype"/>
+        <result column="valid_from" jdbcType="TIMESTAMP" property="validFrom"/>
+        <result column="valid_to" jdbcType="TIMESTAMP" property="validTo"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , gtcode, cust_code, cust_name, gtsum, guaranteetype, valid_from, valid_to, created_by,
+    create_time, updated_by, update_time, `status`, deleted, item1, item2, item3, item4, 
+    item5, item6, item7, item8, item9, attachitems, attachment_name, attachment_url, 
+    depart_code, store_code, card_code, card_name, benefitor, ifloop, depart_name
+    </sql>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_guarantee
+        where deleted = 0
+        <trim suffixOverrides="and | or">
+            <if test="custCode != null and custCode != ''">
+                and cust_code = #{custCode,jdbcType=VARCHAR}
+            </if>
+            <if test="custName != null and custName != ''">
+                and cust_name like concat('%',#{custName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="gtcode != null and gtcode != ''">
+                and gtcode = #{gtcode,jdbcType=VARCHAR}
+            </if>
+            <if test="guaranteetype != null and guaranteetype != ''">
+                and guaranteetype = #{guaranteetype,jdbcType=VARCHAR}
+            </if>
+            <if test="beginDate != null and endDate != null">
+                and valid_to BETWEEN #{beginDate} AND #{endDate}
+            </if>
+        </trim>
+        order by create_time desc
+    </select>
+    <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.metro.ccms.web.debtprotection.vo.GuaranteeVO" useGeneratedKeys="true">
+        insert into tb_sf_guarantee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gtcode != null and gtcode != ''">
+                gtcode,
+            </if>
+            <if test="custCode != null and custCode != ''">
+                cust_code,
+            </if>
+            <if test="custName != null and custName != ''">
+                cust_name,
+            </if>
+            <if test="gtsum != null">
+                gtsum,
+            </if>
+            <if test="guaranteetype != null and guaranteetype != ''">
+                guaranteetype,
+            </if>
+            <if test="validFrom != null">
+                valid_from,
+            </if>
+            <if test="validTo != null">
+                valid_to,
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                created_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gtcode != null  and gtcode != ''">
+                #{gtcode,jdbcType=VARCHAR},
+            </if>
+            <if test="custCode != null  and custCode != ''">
+                #{custCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custName != null  and custName != ''">
+                #{custName,jdbcType=VARCHAR},
+            </if>
+            <if test="gtsum != null">
+                #{gtsum,jdbcType=DECIMAL},
+            </if>
+            <if test="guaranteetype != null and guaranteetype != ''">
+                #{guaranteetype,jdbcType=VARCHAR},
+            </if>
+            <if test="validFrom != null">
+                #{validFrom,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validTo != null">
+                #{validTo,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null and createdBy != ''">
+                #{createdBy,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.metro.ccms.web.debtprotection.vo.GuaranteeVO">
+        update tb_sf_guarantee
+        <set>
+        <if test="gtcode != null and gtcode != ''">
+            gtcode = #{gtcode,jdbcType=VARCHAR},
+        </if>
+        <if test="custCode != null and custCode != ''">
+            cust_code = #{custCode,jdbcType=VARCHAR},
+        </if>
+        <if test="custName != null and custName != ''">
+            cust_name = #{custName,jdbcType=VARCHAR},
+        </if>
+        <if test="gtsum != null">
+            gtsum = #{gtsum,jdbcType=DECIMAL},
+        </if>
+        <if test="guaranteetype != null and guaranteetype != ''">
+            guaranteetype = #{guaranteetype,jdbcType=VARCHAR},
+        </if>
+        <if test="validFrom != null">
+            valid_from = #{validFrom,jdbcType=TIMESTAMP},
+        </if>
+        <if test="validTo != null">
+            valid_to = #{validTo,jdbcType=TIMESTAMP},
+        </if>
+        <if test="updatedBy != null and updatedBy != ''">
+            updated_by = #{updatedBy,jdbcType=VARCHAR},
+        </if>
+            update_time = CURRENT_TIMESTAMP
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="delete" parameterType="java.lang.String">
+        update tb_sf_guarantee
+        set deleted = 1
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="Map">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sf_guarantee
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="getByCode" resultType="java.lang.Integer">
+        select count(0) from tb_sf_guarantee
+        where deleted = 0 and gtcode = #{gtcode,jdbcType=VARCHAR}
+    </select>
+</mapper>

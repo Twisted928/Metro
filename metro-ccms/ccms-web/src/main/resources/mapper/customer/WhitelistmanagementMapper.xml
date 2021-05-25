@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.customer.mapper.WhitelistmanagementMapper">
+  <resultMap id="BaseResultMap" type="com.metro.ccms.web.customer.vo.WhitelistmanagementVO">
+    <id property="id" column="id"  />
+    <result column="created_by" property="createdby" />
+    <result column="create_time" property="createtime" />
+    <result column="updated_by" property="updatedby" />
+    <result column="update_time" property="updatetime" />
+    <result column="approve_status" property="approvestatus" />
+    <result column="deleted" property="deleted" />
+    <result column="item1" property="item1" />
+    <result column="item2" property="item2" />
+    <result column="item3" property="item3" />
+    <result column="item4" property="item4" />
+    <result column="item5" property="item5" />
+    <result column="item6" property="item6" />
+    <result column="item7" property="item7" />
+    <result column="item8" property="item8" />
+    <result column="item9" property="item9" />
+    <result column="application_no" property="applicationno" />
+    <result column="applicant" property="applicant" />
+    <result column="apply_time" property="applytime" />
+    <result column="instanceid" property="instanceid" />
+    <result column="cust_code" property="custcode" />
+    <result column="cust_name" property="custname" />
+    <result column="valid_from" property="validfrom" />
+    <result column="valid_to" property="validto" />
+    <result column="reason" property="reason" />
+  </resultMap>
+  <resultMap id="QdResultMap" type="com.metro.ccms.web.customer.vo.WhitelistmanagementqdVO">
+    <id property="id" column="id"  />
+    <result column="created_by" property="createdby" />
+    <result column="create_time" property="createtime" />
+    <result column="updated_by" property="updatedby" />
+    <result column="update_time" property="updatetime" />
+    <result column="deleted" property="deleted" />
+    <result column="status" property="status" />
+    <result column="item1" property="item1" />
+    <result column="item2" property="item2" />
+    <result column="item3" property="item3" />
+    <result column="item4" property="item4" />
+    <result column="item5" property="item5" />
+    <result column="item6" property="item6" />
+    <result column="item7" property="item7" />
+    <result column="item8" property="item8" />
+    <result column="item9" property="item9" />
+    <result column="cust_code" property="custcode" />
+    <result column="cust_name" property="custname" />
+    <result column="valid_from" property="validfrom" />
+    <result column="valid_to" property="validto" />
+    <result column="reason" property="reason" />
+  </resultMap>
+  <sql id="Base_Column_List">
+           id,
+        created_by,
+        create_time,
+        updated_by,
+        update_time,
+        approve_status,
+        deleted,
+        item1,
+        item2,
+        item3,
+        item4,
+        item5,
+        item6,
+        item7,
+        item8,
+        item9,
+        application_no,
+        applicant,
+        apply_time,
+        instanceid,
+        cust_code,
+        cust_name,
+        valid_from,
+        valid_to,
+        reason
+
+  </sql>
+  <select id="pagesel" parameterType="com.metro.ccms.web.customer.query.WhitelistmanagementQuery" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_cust_white_apply
+    where 1=1
+      <if test="applicationno != null and applicationno != ''">and application_no = #{applicationno}</if>
+      <if test="custcode != null and custcode != ''">and cust_code = #{custcode}</if>
+      <if test="deleted != null and deleted != ''">and deleted = #{deleted}</if>
+      <if test="custname != null and custname != ''">and cust_name like CONCAT('%',#{custname},'%') </if>
+      <if test="approvestatus != null and approvestatus != '' and approvestatus !=0">
+         and approve_status = #{approvestatus}
+      </if>
+      <if test="applytimestr != null and applytimestr != ''">
+          <![CDATA[ and DATE_FORMAT(apply_time,'%Y-%m-%d') >= DATE_FORMAT(#{applytimestr},'%Y-%m-%d')]]>
+      </if>
+      <if test="applytimeend != null and applytimeend != ''">
+          <![CDATA[ and DATE_FORMAT(apply_time,'%Y-%m-%d') <= DATE_FORMAT(#{applytimeend},'%Y-%m-%d')]]>
+      </if>
+      order by apply_time desc
+  </select>
+  <select id="seldetails" parameterType="com.metro.ccms.web.customer.query.WhitelistmanagementQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_cust_white_apply
+    where 1=1
+      <if test="applicationno != null and applicationno != ''">and application_no = #{applicationno}</if>
+      <if test="deleted != null and deleted != ''">and deleted = #{deleted}</if>
+  </select>
+    <update id="updmonitoring" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO">
+        <![CDATA[
+        update tb_cust_white_apply set REASON=#{reason},VALID_FROM=DATE_FORMAT(#{validfrom},'%Y-%m-%d'),VALID_TO=DATE_FORMAT(#{validto},'%Y-%m-%d'),
+        updated_by=#{updatedby},update_time=now()
+        where id =#{id}
+        ]]>
+    </update>
+    <update id="delmonitoring" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO">
+        <![CDATA[
+        update tb_cust_white_apply set deleted='0',
+        updated_by=#{updatedby},update_time=now()
+        where id =#{id}
+        ]]>
+    </update>
+    <insert id="savemonitoring" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO"
+            keyProperty="id">
+        <![CDATA[
+        insert into tb_cust_white_apply(
+            approve_status,application_no,applicant,apply_time,instanceid,
+            cust_code,cust_name,valid_from,valid_to,reason,created_by,create_time
+            )VALUES(
+            #{approvestatus},#{applicationno},#{createdby},now(),#{instanceid},#{custcode},#{custname},
+            DATE_FORMAT(#{validfrom},'%Y-%m-%d'),DATE_FORMAT(#{validto},'%Y-%m-%d'),#{reason},#{createdby},now()
+            )
+            ]]>
+    </insert>
+    <select id="selmaxid" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO"
+        resultType="java.lang.String">
+        select max(id) as id from tb_cust_white_apply
+    </select>
+    <insert id="insertwhite" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO">
+        <![CDATA[
+        insert into tb_cust_white(
+            cust_code,cust_name,valid_from,valid_to,created_by,create_time
+            )VALUES(
+            #{custcode},#{custname},
+            DATE_FORMAT(#{validfrom},'%Y-%m-%d'),DATE_FORMAT(#{validto},'%Y-%m-%d'),#{createdby},now()
+            )
+            ]]>
+    </insert>
+    <update id="updatewhite" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO">
+            <![CDATA[
+            update tb_cust_white set valid_from=DATE_FORMAT(#{validfrom},'%Y-%m-%d'),valid_to=DATE_FORMAT(#{validto},'%Y-%m-%d'),
+            updated_by=#{createdby},update_time=now(),status=#{status},deleted=#{deleted}
+            where cust_code=#{custcode}
+            ]]>
+    </update>
+    <insert id="insertwhitels" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO">
+        <![CDATA[
+        insert into tb_cust_white_his(
+            cust_code,cust_name,valid_from,valid_to,created_by,create_time,status,deleted
+            )VALUES(
+            #{custcode},#{custname},
+            DATE_FORMAT(#{validfrom},'%Y-%m-%d'),DATE_FORMAT(#{validto},'%Y-%m-%d'),#{createdby},now(),#{status},#{deleted}
+            )
+            ]]>
+    </insert>
+    <update id="updatemonitoring" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO">
+        update tb_cust_white_apply set APPROVE_STATUS=#{approvestatus},updated_by=#{updatedby},update_time=NOW() where id=#{id}
+    </update>
+    <update id="updateno" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO">
+        update tb_cust_white_apply set instanceid=#{instanceid} where id=#{id}
+    </update>
+    <select id="seldeplist" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO"
+        resultType="com.metro.ccms.web.credit.domain.CustMembersDO">
+            select store_code as storeCode from tb_cust_members where status='1' and deleted='0' and cust_code=#{custcode}
+    </select>
+    <select id="pageselqd" parameterType="com.metro.ccms.web.customer.query.WhitelistmanagementQuery"
+            resultMap="QdResultMap">
+        select  a.*  from tb_cust_white a
+        INNER JOIN(select  max(id) as id  from tb_cust_white where deleted='1' group by cust_code) b on a.id=b.id
+        where 1=1
+        <if test="custcode != null and custcode != ''">and a.cust_code = #{custcode}</if>
+        <if test="custname != null and custname != ''">and a.cust_name like CONCAT('%',#{custname},'%') </if>
+        <if test="approvestatus != null and approvestatus != ''">and a.status = #{approvestatus}</if>
+        <if test="validfromstr != null and validfromstr != ''">
+            <![CDATA[ and DATE_FORMAT(a.valid_from,'%Y-%m-%d') >= DATE_FORMAT(#{validfromstr},'%Y-%m-%d')]]>
+        </if>
+        <if test="validfromend != null and validfromend != ''">
+            <![CDATA[ and DATE_FORMAT(a.valid_from,'%Y-%m-%d') <= DATE_FORMAT(#{validfromend},'%Y-%m-%d')]]>
+        </if>
+        <if test="validtostr != null and validtostr != ''">
+            <![CDATA[ and DATE_FORMAT(a.valid_to,'%Y-%m-%d') >= DATE_FORMAT(#{validtostr},'%Y-%m-%d')]]>
+        </if>
+        <if test="validtoend != null and validtoend != ''">
+            <![CDATA[ and DATE_FORMAT(a.valid_to,'%Y-%m-%d') <= DATE_FORMAT(#{validtoend},'%Y-%m-%d')]]>
+        </if>
+        <if test="deleted != null and deleted != ''">and a.deleted = #{deleted}</if>
+        <if test="status != null and status != ''">and a.status = #{status}</if>
+    </select>
+    <select id="pagesells" parameterType="com.metro.ccms.web.customer.query.WhitelistmanagementQuery"
+            resultMap="QdResultMap">
+        select  *  from tb_cust_white_his
+        where 1=1
+        <if test="custcode != null and custcode != ''">and cust_code = #{custcode}</if>
+        <if test="custname != null and custname != ''">and cust_name like CONCAT('%',#{custname},'%') </if>
+        <if test="approvestatus != null and approvestatus != ''">and status = #{approvestatus}</if>
+        <if test="validfrom != null and validfrom != ''">
+            <![CDATA[ and DATE_FORMAT(valid_from,'%Y-%m-%d') >= DATE_FORMAT(#{validfrom},'%Y-%m-%d')]]>
+        </if>
+        <if test="validto != null and validto != ''">
+            <![CDATA[ and DATE_FORMAT(valid_to,'%Y-%m-%d') <= DATE_FORMAT(#{validto},'%Y-%m-%d')]]>
+        </if>
+        order by create_time desc
+    </select>
+    <update id="updqd" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO">
+       update tb_cust_white set updated_by=#{updatedby},update_time=now(),
+        <if test="reason != null and reason != ''">
+            reason=#{reason},
+        </if>
+       status=#{status},deleted=#{deleted}
+       where id=#{id}
+    </update>
+    <select id="selcount" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO"
+        resultType="java.lang.Integer">
+        select count(*) from tb_cust_white_apply where id=#{id}  and created_by=#{updatedby}
+    </select>
+    <select id="selhmdcount" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO"
+        resultType="java.lang.Integer">
+        select count(*) from tb_cust_black where cust_code=#{custcode}  and status='1' and deleted='1'
+    </select>
+    <select id="selwhitecount" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO"
+        resultType="java.lang.Integer">
+        select count(*) from tb_cust_white where cust_code=#{custcode}  and status='1' and deleted='1'
+    </select>
+    <select id="selwhite" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO"
+        resultType="java.lang.Integer">
+        select count(*) from tb_cust_white_apply where id=#{id}  and (approve_status='2' or approve_status='3' or approve_status='4') and deleted='1'
+    </select>
+    <select id="selcxwhite" parameterType="com.metro.ccms.web.customer.domian.WhitelistmanagementDO"
+        resultType="java.lang.Integer">
+        select count(*) from tb_cust_white_apply where id=#{id}  and approve_status='4' and deleted='1'
+    </select>
+</mapper>

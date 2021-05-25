@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metro.ccms.web.credit.mapper.QuotaApplyMapper">
+
+  <resultMap id="CreditApplyMap" type="com.metro.ccms.web.credit.domain.QuotaApplyDO">
+    <result property="id"    column="id"    />
+    <result property="createdBy"    column="created_by"    />
+    <result property="createTime"    column="create_time"    />
+    <result property="updatedBy"    column="updated_by"    />
+    <result property="updateTime"    column="update_time"    />
+    <result property="status"    column="status"    />
+    <result property="delete"    column="delete"    />
+    <result property="item1"    column="item1"    />
+    <result property="item2"    column="item2"    />
+    <result property="item3"    column="item3"    />
+    <result property="item4"    column="item4"    />
+    <result property="item5"    column="item5"    />
+    <result property="item6"    column="item6"    />
+    <result property="item7"    column="item7"    />
+    <result property="item8"    column="item8"    />
+    <result property="item9"    column="item9"    />
+    <result property="description"    column="desc"    />
+    <result property="applicationNo"    column="application_no"    />
+    <result property="applicant"    column="applicant"    />
+    <result property="applyTime"    column="apply_time"    />
+    <result property="attachitems"    column="attachitems"    />
+    <result property="attachmentName"    column="attachment_name"    />
+    <result property="attachmentUrl"    column="attachment_url"    />
+    <result property="currency"    column="currency"    />
+    <result property="ctype"    column="ctype"    />
+    <result property="validFrom"    column="valid_from"    />
+    <result property="validTo"    column="valid_to"    />
+    <result property="storeName"    column="store_name"    />
+    <result property="storeCode"    column="store_code"    />
+    <result property="custCode"    column="cust_code"    />
+    <result property="custName"    column="cust_name"    />
+    <result property="cardCode"    column="card_code"    />
+    <result property="cardName"    column="card_name"    />
+    <result property="groupCode"    column="group_code"    />
+    <result property="applyPayterm"    column="apply_payterm"    />
+    <result property="applyLimit"    column="apply_limit"    />
+    <result property="limitType"    column="limit_type"    />
+    <result property="groupPayterm"    column="group_payterm"    />
+    <result property="groupLimit"    column="group_limit"    />
+    <result property="limit"    column="limit"    />
+    <result property="paymentTerm"    column="payment_term"    />
+    <result property="grantedBy"    column="granted_by"    />
+    <result property="grantTime"    column="grant_time"    />
+    <result property="grantStatus"    column="grant_status"    />
+    <result property="ifCreditgr"    column="if_creditgr"    />
+    <result property="rejectType"    column="reject_type"    />
+    <result property="rejectTypeDesc"    column="reject_type_desc"    />
+    <result property="approvedBy"    column="approved_by"    />
+    <result property="approveTime"    column="approve_time"    />
+    <result property="approvalPayterm"    column="approval_payterm"    />
+    <result property="approvalLimit"    column="approval_limit"    />
+    <result property="approveStatus"    column="approve_status"    />
+    <result property="instanceid"    column="instanceid"    />
+    <result property="ifSpecialEn"    column="if_special_en"    />
+    <result property="btype"   column="btype"    />
+    <result property="ifSpecialLi"    column="if_special_li"    />
+    <result property="ifSpecialHt"    column="if_special_ht"    />
+    <result property="groupName"    column="group_name"    />
+  </resultMap>
+
+  <sql id="selectTbCreditApplyVo">
+        select id, created_by, create_time, updated_by, update_time, status, delete,
+        description, application_no, applicant, apply_time, attachitems, attachment_name, attachment_url, currency, ctype, valid_from, valid_to, store_name,
+        store_code, cust_code, cust_name, card_code, card_name, group_code, apply_payterm, apply_limit, limit_type, group_payterm, group_limit, limit,
+        payment_term, granted_by, grant_time, grant_status, if_creditgr, reject_type, reject_type_desc, approved_by, approve_time, approval_payterm,
+        approval_limit, approve_status, instanceid, if_special_en, btype, if_special_li, if_special_ht, group_name from tb_credit_apply
+    </sql>
+
+  <select id="selectTbCreditApplyList" parameterType="com.metro.ccms.web.credit.query.QuotaApplyQuery" resultMap="CreditApplyMap">
+    <include refid="selectTbCreditApplyVo"/>
+    <where>
+      <if test="applicationNo != null  and applicationNo != ''"> and application_no = #{applicationNo}</if>
+      <if test="cardCode != null  and cardCode != ''"> and card_code = #{cardCode}</if>
+      <if test="cardName != null  and cardName != ''"> and card_name like concat('%', #{cardName}, '%')</if>
+      <if test="ctype != null  and ctype != ''"> and ctype = #{ctype}</if>
+      <if test="btype != null "> and btype = #{btype}</if>
+      <if test="limitType != null  and limitType != ''"> and limit_type = #{limitType}</if>
+      <if test="specialType != null and specialType == 1">and ifSpecialEn = #{specialType}</if>
+      <if test="specialType != null and specialType == 2">and ifSpecialLi = #{specialType}</if>
+      <if test="specialType != null and specialType == 3">and ifSpecialHt = #{specialType}</if>
+      <if test="storeCodeList != null and storeCodeList.size() > 0">
+        and storeCode in
+        <foreach collection="storeCodeList" item="item" index="index" separator="," open="(" close=")">
+          #{item}
+        </foreach>
+      </if>
+      <if test="grantTimeStart != null">
+        and date_format(grantTime,'%y%m%d') &gt;= date_format(#{grantTimeStart},'%y%m%d')
+      </if>
+      <if test="grantTimeEnd != null">
+        and date_format(grantTime,'%y%m%d') &lt;= date_format(#{grantTimeEnd},'%y%m%d')
+      </if>
+      <if test="validFrom != null">
+        and date_format(validFrom,'%y%m%d') &gt;= date_format(#{validFrom},'%y%m%d')
+      </if>
+      <if test="validTo != null">
+        and date_format(validTo,'%y%m%d') &lt;= date_format(#{validTo},'%y%m%d')
+      </if>
+      <if test="custCode != null  and custCode != ''"> and cust_code = #{custCode}</if>
+      <if test="custName != null  and custName != ''"> and cust_name like concat('%', #{custName}, '%')</if>
+      <if test="ifCreditgr != null "> and if_creditgr = #{ifCreditgr}</if>
+      <if test="approveStatus != null "> and approve_status = #{approveStatus}</if>
+    </where>
+  </select>
+
+  <select id="selectTbCreditApplyById" parameterType="Long" resultMap="CreditApplyMap">
+    <include refid="selectTbCreditApplyVo"/>
+    where id = #{id}
+  </select>
+
+  <insert id="insertTbCreditApply" parameterType="com.metro.ccms.web.credit.domain.QuotaApplyDO" keyProperty="id">
+    insert into tb_credit_apply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="createdBy != null">created_by,</if>
+      <if test="createTime != null">create_time,</if>
+      <if test="updatedBy != null">updated_by,</if>
+      <if test="updateTime != null">update_time,</if>
+      <if test="status != null">status,</if>
+      <if test="delete != null">delete,</if>
+      <if test="item1 != null">item1,</if>
+      <if test="item2 != null">item2,</if>
+      <if test="item3 != null">item3,</if>
+      <if test="item4 != null">item4,</if>
+      <if test="item5 != null">item5,</if>
+      <if test="item6 != null">item6,</if>
+      <if test="item7 != null">item7,</if>
+      <if test="item8 != null">item8,</if>
+      <if test="item9 != null">item9,</if>
+      <if test="description != null">description,</if>
+      <if test="applicationNo != null">application_no,</if>
+      <if test="applicant != null">applicant,</if>
+      <if test="applyTime != null">apply_time,</if>
+      <if test="attachitems != null">attachitems,</if>
+      <if test="attachmentName != null">attachment_name,</if>
+      <if test="attachmentUrl != null">attachment_url,</if>
+      <if test="currency != null">currency,</if>
+      <if test="ctype != null">ctype,</if>
+      <if test="validFrom != null">valid_from,</if>
+      <if test="validTo != null">valid_to,</if>
+      <if test="storeName != null">store_name,</if>
+      <if test="storeCode != null">store_code,</if>
+      <if test="custCode != null">cust_code,</if>
+      <if test="custName != null">cust_name,</if>
+      <if test="cardCode != null">card_code,</if>
+      <if test="cardName != null">card_name,</if>
+      <if test="groupCode != null">group_code,</if>
+      <if test="applyPayterm != null">apply_payterm,</if>
+      <if test="applyLimit != null">apply_limit,</if>
+      <if test="limitType != null">limit_type,</if>
+      <if test="groupPayterm != null">group_payterm,</if>
+      <if test="groupLimit != null">group_limit,</if>
+      <if test="limit != null">limit,</if>
+      <if test="paymentTerm != null">payment_term,</if>
+      <if test="grantedBy != null">granted_by,</if>
+      <if test="grantTime != null">grant_time,</if>
+      <if test="grantStatus != null">grant_status,</if>
+      <if test="ifCreditgr != null">if_creditgr,</if>
+      <if test="rejectType != null">reject_type,</if>
+      <if test="rejectTypeDesc != null">reject_type_desc,</if>
+      <if test="approvedBy != null">approved_by,</if>
+      <if test="approveTime != null">approve_time,</if>
+      <if test="approvalPayterm != null">approval_payterm,</if>
+      <if test="approvalLimit != null">approval_limit,</if>
+      <if test="approveStatus != null">approve_status,</if>
+      <if test="instanceid != null">instanceid,</if>
+      <if test="ifSpecial != null">if_special,</if>
+      <if test="btype != null">btype,</if>
+      <if test="groupName != null">group_name,</if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="createdBy != null">#{createdBy},</if>
+      <if test="createTime != null">#{createTime},</if>
+      <if test="updatedBy != null">#{updatedBy},</if>
+      <if test="updateTime != null">#{updateTime},</if>
+      <if test="status != null">#{status},</if>
+      <if test="delete != null">#{delete},</if>
+      <if test="item1 != null">#{item1},</if>
+      <if test="item2 != null">#{item2},</if>
+      <if test="item3 != null">#{item3},</if>
+      <if test="item4 != null">#{item4},</if>
+      <if test="item5 != null">#{item5},</if>
+      <if test="item6 != null">#{item6},</if>
+      <if test="item7 != null">#{item7},</if>
+      <if test="item8 != null">#{item8},</if>
+      <if test="item9 != null">#{item9},</if>
+      <if test="description != null">#{description},</if>
+      <if test="applicationNo != null">#{applicationNo},</if>
+      <if test="applicant != null">#{applicant},</if>
+      <if test="applyTime != null">#{applyTime},</if>
+      <if test="attachitems != null">#{attachitems},</if>
+      <if test="attachmentName != null">#{attachmentName},</if>
+      <if test="attachmentUrl != null">#{attachmentUrl},</if>
+      <if test="currency != null">#{currency},</if>
+      <if test="ctype != null">#{ctype},</if>
+      <if test="validFrom != null">#{validFrom},</if>
+      <if test="validTo != null">#{validTo},</if>
+      <if test="storeName != null">#{storeName},</if>
+      <if test="storeCode != null">#{storeCode},</if>
+      <if test="custCode != null">#{custCode},</if>
+      <if test="custName != null">#{custName},</if>
+      <if test="cardCode != null">#{cardCode},</if>
+      <if test="cardName != null">#{cardName},</if>
+      <if test="groupCode != null">#{groupCode},</if>
+      <if test="applyPayterm != null">#{applyPayterm},</if>
+      <if test="applyLimit != null">#{applyLimit},</if>
+      <if test="limitType != null">#{limitType},</if>
+      <if test="groupPayterm != null">#{groupPayterm},</if>
+      <if test="groupLimit != null">#{groupLimit},</if>
+      <if test="limit != null">#{limit},</if>
+      <if test="paymentTerm != null">#{paymentTerm},</if>
+      <if test="grantedBy != null">#{grantedBy},</if>
+      <if test="grantTime != null">#{grantTime},</if>
+      <if test="grantStatus != null">#{grantStatus},</if>
+      <if test="ifCreditgr != null">#{ifCreditgr},</if>
+      <if test="rejectType != null">#{rejectType},</if>
+      <if test="rejectTypeDesc != null">#{rejectTypeDesc},</if>
+      <if test="approvedBy != null">#{approvedBy},</if>
+      <if test="approveTime != null">#{approveTime},</if>
+      <if test="approvalPayterm != null">#{approvalPayterm},</if>
+      <if test="approvalLimit != null">#{approvalLimit},</if>
+      <if test="approveStatus != null">#{approveStatus},</if>
+      <if test="instanceid != null">#{instanceid},</if>
+      <if test="ifSpecial != null">#{ifSpecial},</if>
+      <if test="btype != null">#{btype},</if>
+      <if test="groupName != null">#{groupName},</if>
+    </trim>
+  </insert>
+
+  <update id="updateTbCreditApply" parameterType="com.metro.ccms.web.credit.domain.QuotaApplyDO">
+    update tb_credit_apply
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="createdBy != null">created_by = #{createdBy},</if>
+      <if test="createTime != null">create_time = #{createTime},</if>
+      <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+      <if test="updateTime != null">update_time = #{updateTime},</if>
+      <if test="status != null">status = #{status},</if>
+      <if test="delete != null">delete = #{delete},</if>
+      <if test="item1 != null">item1 = #{item1},</if>
+      <if test="item2 != null">item2 = #{item2},</if>
+      <if test="item3 != null">item3 = #{item3},</if>
+      <if test="item4 != null">item4 = #{item4},</if>
+      <if test="item5 != null">item5 = #{item5},</if>
+      <if test="item6 != null">item6 = #{item6},</if>
+      <if test="item7 != null">item7 = #{item7},</if>
+      <if test="item8 != null">item8 = #{item8},</if>
+      <if test="item9 != null">item9 = #{item9},</if>
+      <if test="description != null">description = #{description},</if>
+      <if test="applicationNo != null">application_no = #{applicationNo},</if>
+      <if test="applicant != null">applicant = #{applicant},</if>
+      <if test="applyTime != null">apply_time = #{applyTime},</if>
+      <if test="attachitems != null">attachitems = #{attachitems},</if>
+      <if test="attachmentName != null">attachment_name = #{attachmentName},</if>
+      <if test="attachmentUrl != null">attachment_url = #{attachmentUrl},</if>
+      <if test="currency != null">currency = #{currency},</if>
+      <if test="ctype != null">ctype = #{ctype},</if>
+      <if test="validFrom != null">valid_from = #{validFrom},</if>
+      <if test="validTo != null">valid_to = #{validTo},</if>
+      <if test="storeName != null">store_name = #{storeName},</if>
+      <if test="storeCode != null">store_code = #{storeCode},</if>
+      <if test="custCode != null">cust_code = #{custCode},</if>
+      <if test="custName != null">cust_name = #{custName},</if>
+      <if test="cardCode != null">card_code = #{cardCode},</if>
+      <if test="cardName != null">card_name = #{cardName},</if>
+      <if test="groupCode != null">group_code = #{groupCode},</if>
+      <if test="applyPayterm != null">apply_payterm = #{applyPayterm},</if>
+      <if test="applyLimit != null">apply_limit = #{applyLimit},</if>
+      <if test="limitType != null">limit_type = #{limitType},</if>
+      <if test="groupPayterm != null">group_payterm = #{groupPayterm},</if>
+      <if test="groupLimit != null">group_limit = #{groupLimit},</if>
+      <if test="limit != null">limit = #{limit},</if>
+      <if test="paymentTerm != null">payment_term = #{paymentTerm},</if>
+      <if test="grantedBy != null">granted_by = #{grantedBy},</if>
+      <if test="grantTime != null">grant_time = #{grantTime},</if>
+      <if test="grantStatus != null">grant_status = #{grantStatus},</if>
+      <if test="ifCreditgr != null">if_creditgr = #{ifCreditgr},</if>
+      <if test="rejectType != null">reject_type = #{rejectType},</if>
+      <if test="rejectTypeDesc != null">reject_type_desc = #{rejectTypeDesc},</if>
+      <if test="approvedBy != null">approved_by = #{approvedBy},</if>
+      <if test="approveTime != null">approve_time = #{approveTime},</if>
+      <if test="approvalPayterm != null">approval_payterm = #{approvalPayterm},</if>
+      <if test="approvalLimit != null">approval_limit = #{approvalLimit},</if>
+      <if test="approveStatus != null">approve_status = #{approveStatus},</if>
+      <if test="instanceid != null">instanceid = #{instanceid},</if>
+      <if test="ifSpecialEn != null">if_special_en = #{ifSpecialEn},</if>
+      <if test="btype != null">btype = #{btype},</if>
+      <if test="ifSpecialLi != null">if_special_li = #{ifSpecialLi},</if>
+      <if test="ifSpecialHt != null">if_special_ht = #{ifSpecialHt},</if>
+      <if test="groupName != null">group_name = #{groupName},</if>
+    </trim>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteTbCreditApplyById" parameterType="Long">
+        delete from tb_credit_apply where id = #{id}
+    </delete>
+
+  <delete id="deleteTbCreditApplyByIds" parameterType="String">
+    delete from tb_credit_apply where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+  <sql id="selectTbInterfaceCustomerVo">
+        select id, cust_no, cust_name, cust_last_name, store_no, branch_id, address, create_date, date_last_change,
+         identification_id, tax_code, post_id, credit_block, credit_block_reason, cust_block, cust_block_reason,
+         cust_contact, phone, cust_email, ddate from tb_interface_customer
+   </sql>
+
+  <select id="getInterfaceCustomerList" parameterType="com.metro.ccms.web.credit.query.CustomerInterfaceQuery" resultType="com.metro.ccms.web.httpsInterface.domain.CustomerInterfaceDO">
+    select t1.id, t1.cust_no, t1.cust_name, t1.cust_last_name, t1.store_no, t1.branch_id, t1.address, t1.create_date, t1.date_last_change,
+    t1.identification_id, t1.tax_code, t1.post_id, t1.credit_block, t1.credit_block_reason, t1.cust_block, t1.cust_block_reason,
+    t1.cust_contact, t1.phone, t1.cust_email, t1.ddate, t2.dept_name as store_name from tb_interface_customer t1 left join sys_dept t2 on t1.store_no=t2.dept_code
+    <where>
+      <if test="custNo != null  and custNo != ''"> and t1.cust_no = #{custNo}</if>
+      <if test="custName != null  and custName != ''"> and t1.cust_name like concat('%', #{custName}, '%')</if>
+      <if test="storeNo != null  and storeNo != ''"> and t1.store_no = #{storeNo}</if>
+      <if test="storeName != null  and storeName != ''"> and t2.dept_name like concat('%', #{storeName}, '%')</if>
+    </where>
+  </select>
+
+</mapper>

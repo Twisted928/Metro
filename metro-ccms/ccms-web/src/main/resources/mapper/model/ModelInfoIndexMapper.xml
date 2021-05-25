@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.metro.ccms.web.model.mapper.ModelInfoIndexMapper">
+
+    <select id="get" resultType="com.metro.ccms.web.model.domain.ModelInfoIndexDO">
+		select `id`,`model_id`,`index_id`,`file`,`weight`,`method`,`add_subtract`,`created_by`,`create_time`,`updated_by`,`update_time`,`standrad`  from model_info_index where id = #{id}
+	</select>
+
+    <select id="list" resultType="com.metro.ccms.web.model.domain.ModelInfoIndexDO">
+        select
+        t.id,t.model_id,t.index_id,t1.type as `type`, t1.name as index_name,t1.expression,t1.description,t1.remark,t.file,t.weight,t.method,t.add_subtract,t.created_by,t.create_time,t.updated_by,t.update_time,t.standrad,t1.fin_standrad as `finStandrad`,t1.orderId
+        from model_info_index t
+        inner join model_index t1 on t.index_id=t1.id
+        <where>
+            and t.model_id = #{modId}
+        </where>
+        order by t1.type,t1.orderId,t.index_id
+
+    </select>
+
+    <insert id="save" parameterType="com.metro.ccms.web.model.domain.ModelInfoIndexDO" keyProperty="id">
+		insert into model_info_index
+		(
+			`model_id`, 
+			`index_id`, 
+			`file`, 
+			`weight`, 
+			`method`, 
+			`add_subtract`,
+			`created_by`, 
+			`create_time`, 
+			`updated_by`, 
+			`update_time`, 
+			`standrad`
+		)
+		values
+		(
+			#{modelId}, 
+			#{indexId}, 
+			#{file}, 
+			#{weight}, 
+			#{method}, 
+			#{addSubtract},
+			#{createdBy}, 
+			#{createTime}, 
+			#{updatedBy}, 
+			#{updateTime}, 
+			#{standrad}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.metro.ccms.web.model.domain.ModelInfoIndexDO">
+        update model_info_index
+        <set>
+            <if test="modelId != null">`model_id` = #{modelId},</if>
+            <if test="indexId != null">`index_id` = #{indexId},</if>
+            <if test="file != null">`file` = #{file},</if>
+            <if test="weight != null">`weight` = #{weight},</if>
+            <if test="method != null">`method` = #{method},</if>
+            <if test="addSubtract != null">`add_subtract` = #{addSubtract},</if>
+            <if test="createdBy != null">`created_by` = #{createdBy},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="updatedBy != null">`updated_by` = #{updatedBy},</if>
+            <if test="updateTime != null">`update_time` = #{updateTime},</if>
+            <if test="standrad != null">`standrad` = #{standrad}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+		delete from model_info_index where id = #{id}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from model_info_index where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <select id="getSumWeightByModelId" resultType="decimal">
+        select case when sum(weight) is null then 0 else sum(weight) end from model_info_index where model_id=#{modelId} and status=1 and deleted=0
+    </select>
+
+</mapper>
